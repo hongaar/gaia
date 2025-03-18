@@ -42,7 +42,8 @@
       "github-actions",
       "husky",
       "lint-staged",
-      "todos"
+      "todos",
+      "dependabot"
     ],
     "scoped": true
   }
