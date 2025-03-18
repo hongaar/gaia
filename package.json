@@ -9,14 +9,18 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "echo 'not implemented'",
+    "build": "yarn workspaces foreach --all --topological --verbose run build",
+    "build:clean": "yarn workspaces foreach --all --topological --verbose run build:clean",
+    "build:watch": "yarn workspaces foreach --all --parallel --interlaced run build:watch",
     "doctoc": "doctoc README.md",
     "format": "prettier --write --ignore-unknown .",
     "format:check": "prettier --check --ignore-unknown .",
     "postinstall": "husky install",
     "release": "semantic-release",
-    "test": "echo 'not implemented'",
-    "todos": "leasot --exit-nicely --reporter markdown --ignore \"**/node_modules\" \"**/*.ts\" > TODO.md"
+    "test": "yarn workspaces foreach --all --topological --verbose run test",
+    "todos": "leasot --exit-nicely --reporter markdown --ignore \"**/node_modules\" \"**/*.ts\" > TODO.md",
+    "typescript": "yarn build:clean && tsc --build --force",
+    "typescript:watch": "tsc --build --watch"
   },
   "lint-staged": {
     "*": "prettier --write --ignore-unknown"
@@ -31,7 +35,8 @@
     "moker": "4.3.0",
     "prettier": "3.5.3",
     "semantic-release": "24.2.3",
-    "semantic-release-yarn": "3.0.2"
+    "semantic-release-yarn": "3.0.2",
+    "typescript": "5.8.2"
   },
   "packageManager": "yarn@4.7.0",
   "moker": {
