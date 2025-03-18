@@ -10,14 +10,40 @@
   ],
   "scripts": {
     "build": "echo 'not implemented'",
-    "test": "echo 'not implemented'"
+    "doctoc": "doctoc README.md",
+    "format": "prettier --write --ignore-unknown .",
+    "format:check": "prettier --check --ignore-unknown .",
+    "postinstall": "husky install",
+    "release": "semantic-release",
+    "test": "echo 'not implemented'",
+    "todos": "leasot --exit-nicely --reporter markdown --ignore \"**/node_modules\" \"**/*.ts\" > TODO.md"
+  },
+  "lint-staged": {
+    "*": "prettier --write --ignore-unknown"
   },
   "devDependencies": {
-    "moker": "4.3.0"
+    "@semantic-release/changelog": "6.0.3",
+    "@semantic-release/git": "10.0.1",
+    "doctoc": "2.2.1",
+    "husky": "9.1.7",
+    "leasot": "14.4.0",
+    "lint-staged": "15.5.0",
+    "moker": "4.3.0",
+    "prettier": "3.5.3",
+    "semantic-release": "24.2.3",
+    "semantic-release-yarn": "3.0.2"
   },
   "packageManager": "yarn@4.7.0",
   "moker": {
-    "plugins": [],
+    "plugins": [
+      "prettier",
+      "doctoc",
+      "semantic-release",
+      "github-actions",
+      "husky",
+      "lint-staged",
+      "todos"
+    ],
     "scoped": true
   }
 }
