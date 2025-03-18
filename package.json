@@ -1,4 +1,23 @@
 {
   "name": "gaia",
-  "packageManager": "yarn@4.7.0"
+  "version": "0.0.0",
+  "private": true,
+  "repository": "github:hongaar/gaia",
+  "license": "MIT",
+  "author": "Joram van den Boezem <joram@vandenboezem.nl>",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "echo 'not implemented'",
+    "test": "echo 'not implemented'"
+  },
+  "devDependencies": {
+    "moker": "4.3.0"
+  },
+  "packageManager": "yarn@4.7.0",
+  "moker": {
+    "plugins": [],
+    "scoped": true
+  }
 }
