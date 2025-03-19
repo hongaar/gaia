@@ -1,0 +1,33 @@
+{
+  "$schema": "http://localhost:3001/manifest.schema.json",
+  "href": "http://localhost:3001",
+  "name": "example-source",
+  "description": "Example source",
+  "icon": "http://localhost:3001/icon.png",
+  "resources": [
+    {
+      "href": "http://localhost:3001/features/example",
+      "type": "feature-collection",
+      "layers": [
+        {
+          "id": "example",
+          "name": "Example",
+          "description": "Example layer",
+          "icon": "http://localhost:3001/icon.png",
+          "options": [
+            "icons",
+            "labels",
+            "showEverywhere",
+            "showAroundOperation"
+          ],
+          "parameters": [
+            {
+              "key": "sort",
+              "value": "properties.modified"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

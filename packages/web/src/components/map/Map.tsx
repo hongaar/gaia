@@ -1,13 +1,30 @@
+import type { FeatureCollection } from "geojson";
 import "maplibre-gl/dist/maplibre-gl.css";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import type { ViewState } from "react-map-gl/maplibre";
 import MapLibre, {
   AttributionControl,
+  Layer,
   NavigationControl,
+  ScaleControl,
+  Source,
 } from "react-map-gl/maplibre";
-import { baseLayers } from "./baseLayers";
+import {
+  BaseLayerControl,
+  baseLayers,
+  FeatureSourceControl,
+  LayerControl,
+} from "../";
+import { useFeatureSource } from "../../contexts/FeatureSourceContext";
 
-type MapState = ViewState & { layer: string };
+interface GeoJSONSource {
+  type: "geojson";
+  data: FeatureCollection;
+}
+
+interface MapState extends ViewState {
+  layer: string;
+}
 
 // Add CSS for navigation control positioning
 const navigationStyle = `
@@ -43,7 +60,7 @@ function getMapState(): MapState {
 }
 
 // Function to update URL with current view state
-function updateUrl(mapState: MapState) {
+function updateUrl(mapState: MapState): void {
   const params = new URLSearchParams(window.location.search);
 
   params.set("lng", mapState.longitude.toFixed(6));
@@ -54,22 +71,20 @@ function updateUrl(mapState: MapState) {
   params.set("layer", mapState.layer);
 
   const newUrl = `${window.location.pathname}?${params.toString()}`;
-
   window.history.replaceState({}, "", newUrl);
 }
 
 export function Map() {
   const [mapState, setMapState] = useState<MapState>(getMapState());
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const menuRef = useRef<HTMLDivElement>(null);
+  const { sources, getFeatures, isLayerVisible } = useFeatureSource();
+  const [featureLayers, setFeatureLayers] = useState<
+    Record<string, GeoJSONSource>
+  >({});
 
   // Update map state when moving map
-  const onMove = useCallback(
-    ({ viewState }: { viewState: ViewState }) => {
-      setMapState({ ...mapState, ...viewState });
-    },
-    [mapState],
-  );
+  const onMove = useCallback(({ viewState }: { viewState: ViewState }) => {
+    setMapState((prev) => ({ ...prev, ...viewState }));
+  }, []);
 
   // Update URL when finished moving map
   const onMoveEnd = useCallback(
@@ -83,104 +98,48 @@ export function Map() {
 
   // Update URL when layer changes
   useEffect(() => {
-    updateUrl({ ...mapState, layer: mapState.layer });
+    updateUrl(mapState);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mapState.layer]);
 
-  // Close menu when clicking outside
+  // Load feature layers when sources or layer visibility changes
   useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        setIsMenuOpen(false);
-      }
-    }
+    const loadFeatures = async () => {
+      const newFeatureLayers: Record<string, GeoJSONSource> = {};
 
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+      for (const source of sources) {
+        for (const resource of source.resources) {
+          for (const layer of resource.layers) {
+            if (isLayerVisible(source.href, resource.href, layer.id)) {
+              const features = await getFeatures(
+                source.href,
+                resource.href,
+                layer.id,
+              );
+              if (features) {
+                const sourceId = `${source.href}-${resource.href}-${layer.id}`;
+                newFeatureLayers[sourceId] = {
+                  type: "geojson",
+                  data: features,
+                };
+              }
+            }
+          }
+        }
+      }
+
+      setFeatureLayers(newFeatureLayers);
+    };
+
+    loadFeatures();
+  }, [sources, getFeatures, isLayerVisible]);
 
   const currentLayer = baseLayers.find((layer) => layer.id === mapState.layer);
 
   return (
     <>
       <style>{navigationStyle}</style>
-      <div
-        ref={menuRef}
-        style={{
-          zIndex: 1000,
-          position: "absolute",
-          top: "10px",
-          right: "10px",
-          background: "white",
-          borderRadius: "4px",
-          boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
-          overflow: "visible",
-        }}
-      >
-        <button
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "8px",
-            padding: "8px",
-            border: "none",
-            background: "none",
-            cursor: "pointer",
-            width: "100%",
-          }}
-        >
-          <img
-            src={currentLayer?.thumbnail}
-            alt={currentLayer?.name}
-            style={{ width: "24px", height: "24px", objectFit: "cover" }}
-          />
-        </button>
 
-        {isMenuOpen && (
-          <div
-            style={{
-              zIndex: 1001,
-              position: "absolute",
-              top: 0,
-              right: 0,
-              background: "white",
-              borderRadius: "4px",
-              boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
-            }}
-          >
-            {baseLayers.map((layer) => (
-              <button
-                key={layer.id}
-                onClick={() => {
-                  setMapState({ ...mapState, layer: layer.id });
-                  setIsMenuOpen(false);
-                }}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "8px",
-                  padding: "8px",
-                  border: "none",
-                  background: "none",
-                  cursor: "pointer",
-                  width: "100%",
-                  textAlign: "left",
-                  borderBottom: "1px solid #eee",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                <img
-                  src={layer.thumbnail}
-                  alt={layer.name}
-                  style={{ width: "24px", height: "24px", objectFit: "cover" }}
-                />
-                <span>{layer.name}</span>
-              </button>
-            ))}
-          </div>
-        )}
-      </div>
       <MapLibre
         {...mapState}
         onMove={onMove}
@@ -196,13 +155,76 @@ export function Map() {
         reuseMaps={true}
         pitchWithRotate={true}
       >
+        <BaseLayerControl
+          layerId={mapState.layer}
+          onChange={(id) => setMapState((prev) => ({ ...prev, layer: id }))}
+        />
         <NavigationControl
           position="top-right"
           visualizePitch={true}
           showCompass={true}
           showZoom={true}
         />
+        <ScaleControl />
         <AttributionControl position="bottom-right" />
+        <FeatureSourceControl />
+        <LayerControl />
+
+        {Object.entries(featureLayers).map(([sourceId, sourceData]) => (
+          <Source
+            key={sourceId}
+            id={sourceId}
+            type="geojson"
+            data={sourceData.data}
+          >
+            {/* Point features */}
+            <Layer
+              id={`${sourceId}-points`}
+              type="circle"
+              filter={[
+                "all",
+                ["==", ["geometry-type"], "Point"],
+                ["!=", ["get", "type"], "vertex"], // Exclude vertices
+              ]}
+              paint={{
+                "circle-radius": 6,
+                "circle-color": ["get", "color"],
+                "circle-stroke-width": 1,
+                "circle-stroke-color": "#fff",
+              }}
+            />
+
+            {/* LineString features */}
+            <Layer
+              id={`${sourceId}-lines`}
+              type="line"
+              filter={["==", ["geometry-type"], "LineString"]}
+              paint={{
+                "line-width": 2,
+                "line-color": ["get", "color"],
+              }}
+            />
+
+            {/* Polygon features */}
+            <Layer
+              id={`${sourceId}-polygons-fill`}
+              type="fill"
+              filter={["==", ["geometry-type"], "Polygon"]}
+              paint={{
+                "fill-color": ["get", "color"],
+              }}
+            />
+            <Layer
+              id={`${sourceId}-polygons-outline`}
+              type="line"
+              filter={["==", ["geometry-type"], "Polygon"]}
+              paint={{
+                "line-width": 1,
+                "line-color": ["get", "color"],
+              }}
+            />
+          </Source>
+        ))}
       </MapLibre>
     </>
   );

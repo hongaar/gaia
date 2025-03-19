@@ -1,9 +1,31 @@
 // Base layer configurations
+interface MapSource {
+  type: "raster";
+  tiles: string[];
+  tileSize: number;
+  attribution: string;
+  maxzoom: number;
+}
+
+interface MapLayer {
+  id: string;
+  type: "raster";
+  source: string;
+}
+
+interface MapStyle {
+  version: 8;
+  sources: {
+    [key: string]: MapSource;
+  };
+  layers: MapLayer[];
+}
+
 interface BaseLayer {
   id: string;
   name: string;
   thumbnail: string;
-  style: any;
+  style: MapStyle | string;
 }
 
 export const baseLayers: BaseLayer[] = [
@@ -12,10 +34,10 @@ export const baseLayers: BaseLayer[] = [
     name: "OpenStreetMap (raster)",
     thumbnail: "/assets/icon-raster.png",
     style: {
-      version: 8 as const,
+      version: 8,
       sources: {
         osm: {
-          type: "raster" as const,
+          type: "raster",
           tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
           tileSize: 256,
           attribution: "&copy; OpenStreetMap Contributors",
@@ -25,7 +47,7 @@ export const baseLayers: BaseLayer[] = [
       layers: [
         {
           id: "osm",
-          type: "raster" as const,
+          type: "raster",
           source: "osm",
         },
       ],

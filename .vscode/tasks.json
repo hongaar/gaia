@@ -7,6 +7,13 @@
       "option": "watch",
       "group": "build",
       "label": "tsc: watch - tsconfig.json"
+    },
+    {
+      "type": "typescript",
+      "tsconfig": "tsconfig.json",
+      "option": "watch",
+      "group": "build",
+      "label": "tsc: watch - tsconfig.json"
     }
   ]
 }
