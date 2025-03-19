@@ -5,6 +5,9 @@ import MapLibre, {
   AttributionControl,
   NavigationControl,
 } from "react-map-gl/maplibre";
+import { baseLayers } from "./baseLayers";
+
+type MapState = ViewState & { layer: string };
 
 // Add CSS for navigation control positioning
 const navigationStyle = `
@@ -13,111 +16,76 @@ const navigationStyle = `
   }
 `;
 
-// Base layer configurations
-interface BaseLayer {
-  id: string;
-  name: string;
-  thumbnail: string;
-  style: any;
-}
-
-const baseLayers: BaseLayer[] = [
-  {
-    id: "osm-raster",
-    name: "OpenStreetMap (raster)",
-    thumbnail: "/assets/icon-raster.png",
-    style: {
-      version: 8 as const,
-      sources: {
-        osm: {
-          type: "raster" as const,
-          tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
-          tileSize: 256,
-          attribution: "&copy; OpenStreetMap Contributors",
-          maxzoom: 19,
-        },
-      },
-      layers: [
-        {
-          id: "osm",
-          type: "raster" as const,
-          source: "osm",
-        },
-      ],
-    },
-  },
-  {
-    id: "osm-vector",
-    name: "OpenStreetMap (vector)",
-    thumbnail: "/assets/icon-vector.png",
-    style: "https://tiles.openfreemap.org/styles/liberty",
-  },
-];
-
 // Initial view state
-const initialViewState: ViewState = {
-  longitude: 5.3878, // Centered on the Netherlands
-  latitude: 52.1561, // Centered on the Netherlands
+const initialMapState: MapState = {
+  longitude: 5.3878,
+  latitude: 52.1561,
   zoom: 7,
   bearing: 0,
   pitch: 0,
   padding: { top: 0, bottom: 0, left: 0, right: 0 },
+  layer: "osm-raster",
 };
 
 // Function to get view state from URL parameters
-function getViewStateFromUrl(): Partial<ViewState & { layer: string }> {
+function getMapState(): MapState {
   const params = new URLSearchParams(window.location.search);
+
   return {
-    longitude: params.has("lng") ? parseFloat(params.get("lng")!) : undefined,
-    latitude: params.has("lat") ? parseFloat(params.get("lat")!) : undefined,
-    zoom: params.has("zoom") ? parseFloat(params.get("zoom")!) : undefined,
-    bearing: params.has("bearing")
-      ? parseFloat(params.get("bearing")!)
-      : undefined,
-    layer: params.get("layer") || undefined,
+    ...initialMapState,
+    longitude: Number(params.get("lng") ?? initialMapState.longitude),
+    latitude: Number(params.get("lat") ?? initialMapState.latitude),
+    zoom: Number(params.get("zoom") ?? initialMapState.zoom),
+    bearing: Number(params.get("bearing") ?? initialMapState.bearing),
+    pitch: Number(params.get("pitch") ?? initialMapState.pitch),
+    layer: params.get("layer") ?? initialMapState.layer,
   };
 }
 
 // Function to update URL with current view state
-function updateUrl(viewState: ViewState, layer: string) {
+function updateUrl(mapState: MapState) {
   const params = new URLSearchParams(window.location.search);
-  params.set("lng", viewState.longitude.toFixed(6));
-  params.set("lat", viewState.latitude.toFixed(6));
-  params.set("zoom", viewState.zoom.toFixed(2));
-  params.set("bearing", viewState.bearing.toFixed(2));
-  params.set("layer", layer);
+
+  params.set("lng", mapState.longitude.toFixed(6));
+  params.set("lat", mapState.latitude.toFixed(6));
+  params.set("zoom", mapState.zoom.toFixed(2));
+  params.set("bearing", mapState.bearing.toFixed(2));
+  params.set("pitch", mapState.pitch.toFixed(2));
+  params.set("layer", mapState.layer);
 
   const newUrl = `${window.location.pathname}?${params.toString()}`;
+
   window.history.replaceState({}, "", newUrl);
 }
 
 export function Map() {
-  const [viewState, setViewState] = useState<ViewState>({
-    ...initialViewState,
-    ...getViewStateFromUrl(),
-  });
-  const [selectedLayer, setSelectedLayer] = useState<string>(
-    getViewStateFromUrl().layer || "osm-raster",
-  );
+  const [mapState, setMapState] = useState<MapState>(getMapState());
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
-  const onMove = useCallback(({ viewState }: { viewState: ViewState }) => {
-    setViewState(viewState);
-  }, []);
+  // Update map state when moving map
+  const onMove = useCallback(
+    ({ viewState }: { viewState: ViewState }) => {
+      setMapState({ ...mapState, ...viewState });
+    },
+    [mapState],
+  );
 
+  // Update URL when finished moving map
   const onMoveEnd = useCallback(
     ({ viewState }: { viewState: ViewState }) => {
-      setViewState(viewState);
-      updateUrl(viewState, selectedLayer);
+      const newMapState = { ...mapState, ...viewState };
+      setMapState(newMapState);
+      updateUrl(newMapState);
     },
-    [selectedLayer],
+    [mapState],
   );
 
   // Update URL when layer changes
   useEffect(() => {
-    updateUrl(viewState, selectedLayer);
-  }, [viewState, selectedLayer]);
+    updateUrl({ ...mapState, layer: mapState.layer });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mapState.layer]);
 
   // Close menu when clicking outside
   useEffect(() => {
@@ -131,7 +99,7 @@ export function Map() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const currentLayer = baseLayers.find((layer) => layer.id === selectedLayer);
+  const currentLayer = baseLayers.find((layer) => layer.id === mapState.layer);
 
   return (
     <>
@@ -146,7 +114,6 @@ export function Map() {
           background: "white",
           borderRadius: "4px",
           boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
-          width: "200px",
           overflow: "visible",
         }}
       >
@@ -156,7 +123,7 @@ export function Map() {
             display: "flex",
             alignItems: "center",
             gap: "8px",
-            padding: "8px 12px",
+            padding: "8px",
             border: "none",
             background: "none",
             cursor: "pointer",
@@ -168,7 +135,6 @@ export function Map() {
             alt={currentLayer?.name}
             style={{ width: "24px", height: "24px", objectFit: "cover" }}
           />
-          <span>{currentLayer?.name}</span>
         </button>
 
         {isMenuOpen && (
@@ -181,27 +147,27 @@ export function Map() {
               background: "white",
               borderRadius: "4px",
               boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
-              width: "200px",
             }}
           >
             {baseLayers.map((layer) => (
               <button
                 key={layer.id}
                 onClick={() => {
-                  setSelectedLayer(layer.id);
+                  setMapState({ ...mapState, layer: layer.id });
                   setIsMenuOpen(false);
                 }}
                 style={{
                   display: "flex",
                   alignItems: "center",
                   gap: "8px",
-                  padding: "8px 12px",
+                  padding: "8px",
                   border: "none",
-                  background: layer.id === selectedLayer ? "#ADD8E6" : "none",
+                  background: "none",
                   cursor: "pointer",
                   width: "100%",
                   textAlign: "left",
                   borderBottom: "1px solid #eee",
+                  whiteSpace: "nowrap",
                 }}
               >
                 <img
@@ -216,7 +182,7 @@ export function Map() {
         )}
       </div>
       <MapLibre
-        {...viewState}
+        {...mapState}
         onMove={onMove}
         onMoveEnd={onMoveEnd}
         style={{ width: "100vw", height: "100vh" }}
@@ -228,10 +194,11 @@ export function Map() {
         doubleClickZoom={true}
         attributionControl={false}
         reuseMaps={true}
-        pitchWithRotate={false}
+        pitchWithRotate={true}
       >
         <NavigationControl
           position="top-right"
+          visualizePitch={true}
           showCompass={true}
           showZoom={true}
         />
