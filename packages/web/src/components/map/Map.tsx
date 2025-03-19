@@ -24,7 +24,7 @@ interface BaseLayer {
 const baseLayers: BaseLayer[] = [
   {
     id: "osm-raster",
-    name: "OpenStreetMap Raster",
+    name: "OpenStreetMap (raster)",
     thumbnail: "/assets/icon-raster.png",
     style: {
       version: 8 as const,
@@ -48,7 +48,7 @@ const baseLayers: BaseLayer[] = [
   },
   {
     id: "osm-vector",
-    name: "OpenStreetMap Vector",
+    name: "OpenStreetMap (vector)",
     thumbnail: "/assets/icon-vector.png",
     style: "https://tiles.openfreemap.org/styles/liberty",
   },
@@ -65,7 +65,7 @@ const initialViewState: ViewState = {
 };
 
 // Function to get view state from URL parameters
-function getViewStateFromUrl(): Partial<ViewState> & { layer?: string } {
+function getViewStateFromUrl(): Partial<ViewState & { layer: string }> {
   const params = new URLSearchParams(window.location.search);
   return {
     longitude: params.has("lng") ? parseFloat(params.get("lng")!) : undefined,
@@ -92,20 +92,13 @@ function updateUrl(viewState: ViewState, layer: string) {
 }
 
 export function Map() {
-  const [viewState, setViewState] = useState<ViewState>(() => {
-    const urlViewState = getViewStateFromUrl();
-    return {
-      ...initialViewState,
-      longitude: urlViewState.longitude ?? initialViewState.longitude,
-      latitude: urlViewState.latitude ?? initialViewState.latitude,
-      zoom: urlViewState.zoom ?? initialViewState.zoom,
-      bearing: urlViewState.bearing ?? initialViewState.bearing,
-    };
+  const [viewState, setViewState] = useState<ViewState>({
+    ...initialViewState,
+    ...getViewStateFromUrl(),
   });
-  const [selectedLayer, setSelectedLayer] = useState<string>(() => {
-    const urlViewState = getViewStateFromUrl();
-    return urlViewState.layer || "osm-raster";
-  });
+  const [selectedLayer, setSelectedLayer] = useState<string>(
+    getViewStateFromUrl().layer || "osm-raster",
+  );
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -115,6 +108,7 @@ export function Map() {
 
   const onMoveEnd = useCallback(
     ({ viewState }: { viewState: ViewState }) => {
+      setViewState(viewState);
       updateUrl(viewState, selectedLayer);
     },
     [selectedLayer],
@@ -123,7 +117,7 @@ export function Map() {
   // Update URL when layer changes
   useEffect(() => {
     updateUrl(viewState, selectedLayer);
-  }, [selectedLayer, viewState]);
+  }, [viewState, selectedLayer]);
 
   // Close menu when clicking outside
   useEffect(() => {
@@ -145,13 +139,14 @@ export function Map() {
       <div
         ref={menuRef}
         style={{
+          zIndex: 1000,
           position: "absolute",
           top: "10px",
           right: "10px",
-          zIndex: 1000,
           background: "white",
           borderRadius: "4px",
           boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
+          width: "200px",
           overflow: "visible",
         }}
       >
@@ -179,15 +174,14 @@ export function Map() {
         {isMenuOpen && (
           <div
             style={{
+              zIndex: 1001,
               position: "absolute",
-              top: "100%",
+              top: 0,
               right: 0,
               background: "white",
-              boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
               borderRadius: "4px",
-              marginTop: "4px",
-              minWidth: "200px",
-              zIndex: 1001,
+              boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
+              width: "200px",
             }}
           >
             {baseLayers.map((layer) => (
@@ -203,7 +197,7 @@ export function Map() {
                   gap: "8px",
                   padding: "8px 12px",
                   border: "none",
-                  background: "none",
+                  background: layer.id === selectedLayer ? "#ADD8E6" : "none",
                   cursor: "pointer",
                   width: "100%",
                   textAlign: "left",
