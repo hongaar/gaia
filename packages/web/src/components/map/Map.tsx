@@ -56,9 +56,9 @@ const baseLayers: BaseLayer[] = [
 
 // Initial view state
 const initialViewState: ViewState = {
-  longitude: -122.4,
-  latitude: 37.8,
-  zoom: 14,
+  longitude: 5.3878, // Centered on the Netherlands
+  latitude: 52.1561, // Centered on the Netherlands
+  zoom: 7,
   bearing: 0,
   pitch: 0,
   padding: { top: 0, bottom: 0, left: 0, right: 0 },
@@ -104,7 +104,7 @@ export function Map() {
   });
   const [selectedLayer, setSelectedLayer] = useState<string>(() => {
     const urlViewState = getViewStateFromUrl();
-    return urlViewState.layer || "osm";
+    return urlViewState.layer || "osm-raster";
   });
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
