@@ -1,5 +1,11 @@
 import type { FeatureCollection } from "geojson";
-import { createContext, ReactNode, useContext, useState } from "react";
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
 interface FeatureSource {
   $schema: string;
@@ -51,10 +57,26 @@ const FeatureSourceContext = createContext<
 >(undefined);
 
 export function FeatureSourceProvider({ children }: { children: ReactNode }) {
-  const [sources, setSources] = useState<FeatureSource[]>([]);
+  const [sources, setSources] = useState<FeatureSource[]>(() => {
+    const savedSources = localStorage.getItem("featureSources");
+    return savedSources ? JSON.parse(savedSources) : [];
+  });
   const [layerVisibility, setLayerVisibility] = useState<
     Record<string, boolean>
-  >({});
+  >(() => {
+    const savedVisibility = localStorage.getItem("layerVisibility");
+    return savedVisibility ? JSON.parse(savedVisibility) : {};
+  });
+
+  // Save sources to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem("featureSources", JSON.stringify(sources));
+  }, [sources]);
+
+  // Save layer visibility to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem("layerVisibility", JSON.stringify(layerVisibility));
+  }, [layerVisibility]);
 
   const fetchManifest = async (url: string): Promise<FeatureSource> => {
     try {

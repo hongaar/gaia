@@ -1,7 +1,11 @@
 import type { Feature, FeatureCollection } from "geojson";
 import "maplibre-gl/dist/maplibre-gl.css";
-import { useCallback, useEffect, useState } from "react";
-import type { MapLayerMouseEvent, ViewState } from "react-map-gl/maplibre";
+import { useCallback, useEffect, useRef, useState } from "react";
+import type {
+  MapLayerMouseEvent,
+  MapRef,
+  ViewState,
+} from "react-map-gl/maplibre";
 import MapLibre, {
   AttributionControl,
   Layer,
@@ -82,7 +86,11 @@ export function Map() {
     Record<string, GeoJSONSource>
   >({});
   const [selectedFeature, setSelectedFeature] = useState<Feature | null>(null);
-  const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
+  const [tooltipPosition, setTooltipPosition] = useState<{
+    lng: number;
+    lat: number;
+  } | null>(null);
+  const mapRef = useRef<MapRef>(null);
 
   // Update map state when moving map
   const onMove = useCallback(({ viewState }: { viewState: ViewState }) => {
@@ -141,7 +149,6 @@ export function Map() {
 
   const handleMapClick = useCallback(
     (event: MapLayerMouseEvent) => {
-      console.log("MapLayerMouseEvent:", event);
       // Get all features at the click point, but only from our custom layers
       const layerIds = Object.keys(featureLayers).flatMap((sourceId) => [
         `${sourceId}-points`,
@@ -154,9 +161,12 @@ export function Map() {
       });
       if (features && features.length > 0) {
         setSelectedFeature(features[0]);
-        setTooltipPosition({ x: event.point.x, y: event.point.y });
+        // Convert screen coordinates to map coordinates
+        const lngLat = event.target.unproject(event.point);
+        setTooltipPosition({ lng: lngLat.lng, lat: lngLat.lat });
       } else {
         setSelectedFeature(null);
+        setTooltipPosition(null);
       }
     },
     [featureLayers],
@@ -185,6 +195,7 @@ export function Map() {
       <style>{navigationStyle}</style>
 
       <MapLibre
+        ref={mapRef}
         {...mapState}
         onMove={onMove}
         onMoveEnd={onMoveEnd}
@@ -274,8 +285,8 @@ export function Map() {
       </MapLibre>
       <FeatureTooltip
         feature={selectedFeature}
-        x={tooltipPosition.x}
-        y={tooltipPosition.y}
+        lngLat={tooltipPosition}
+        mapRef={mapRef.current}
       />
     </>
   );
