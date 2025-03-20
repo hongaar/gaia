@@ -1,7 +1,7 @@
 import type { Feature, FeatureCollection } from "geojson";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { useCallback, useEffect, useState } from "react";
-import type { ViewState, MapLayerMouseEvent } from "react-map-gl/maplibre";
+import type { MapLayerMouseEvent, ViewState } from "react-map-gl/maplibre";
 import MapLibre, {
   AttributionControl,
   Layer,
@@ -9,7 +9,6 @@ import MapLibre, {
   ScaleControl,
   Source,
 } from "react-map-gl/maplibre";
-import type { MapMouseEvent } from "maplibre-gl";
 import {
   BaseLayerControl,
   baseLayers,
