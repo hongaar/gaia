@@ -1,7 +1,7 @@
-import type { FeatureCollection } from "geojson";
+import type { Feature, FeatureCollection } from "geojson";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { useCallback, useEffect, useState } from "react";
-import type { ViewState } from "react-map-gl/maplibre";
+import type { ViewState, MapLayerMouseEvent } from "react-map-gl/maplibre";
 import MapLibre, {
   AttributionControl,
   Layer,
@@ -9,6 +9,7 @@ import MapLibre, {
   ScaleControl,
   Source,
 } from "react-map-gl/maplibre";
+import type { MapMouseEvent } from "maplibre-gl";
 import {
   BaseLayerControl,
   baseLayers,
@@ -16,6 +17,7 @@ import {
   LayerControl,
 } from "../";
 import { useFeatureSource } from "../../contexts/FeatureSourceContext";
+import { FeatureTooltip } from "./FeatureTooltip";
 
 interface GeoJSONSource {
   type: "geojson";
@@ -80,6 +82,8 @@ export function Map() {
   const [featureLayers, setFeatureLayers] = useState<
     Record<string, GeoJSONSource>
   >({});
+  const [selectedFeature, setSelectedFeature] = useState<Feature | null>(null);
+  const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
 
   // Update map state when moving map
   const onMove = useCallback(({ viewState }: { viewState: ViewState }) => {
@@ -136,6 +140,47 @@ export function Map() {
 
   const currentLayer = baseLayers.find((layer) => layer.id === mapState.layer);
 
+  const handleMapClick = useCallback(
+    (event: MapLayerMouseEvent) => {
+      console.log("MapLayerMouseEvent:", event);
+      // Get all features at the click point, but only from our custom layers
+      const layerIds = Object.keys(featureLayers).flatMap((sourceId) => [
+        `${sourceId}-points`,
+        `${sourceId}-lines`,
+        `${sourceId}-polygons-fill`,
+        `${sourceId}-polygons-outline`,
+      ]);
+      const features = event.target.queryRenderedFeatures(event.point, {
+        layers: layerIds,
+      });
+      if (features && features.length > 0) {
+        setSelectedFeature(features[0]);
+        setTooltipPosition({ x: event.point.x, y: event.point.y });
+      } else {
+        setSelectedFeature(null);
+      }
+    },
+    [featureLayers],
+  );
+
+  const handleMapMouseMove = useCallback(
+    (event: MapLayerMouseEvent) => {
+      const layerIds = Object.keys(featureLayers).flatMap((sourceId) => [
+        `${sourceId}-points`,
+        `${sourceId}-lines`,
+        `${sourceId}-polygons-fill`,
+        `${sourceId}-polygons-outline`,
+      ]);
+      const features = event.target.queryRenderedFeatures(event.point, {
+        layers: layerIds,
+      });
+      // Change cursor to pointer if hovering over a feature, otherwise default
+      event.target.getCanvas().style.cursor =
+        features.length > 0 ? "pointer" : "";
+    },
+    [featureLayers],
+  );
+
   return (
     <>
       <style>{navigationStyle}</style>
@@ -144,6 +189,8 @@ export function Map() {
         {...mapState}
         onMove={onMove}
         onMoveEnd={onMoveEnd}
+        onClick={handleMapClick}
+        onMouseMove={handleMapMouseMove}
         style={{ width: "100vw", height: "100vh" }}
         mapStyle={currentLayer?.style}
         scrollZoom={true}
@@ -226,6 +273,11 @@ export function Map() {
           </Source>
         ))}
       </MapLibre>
+      <FeatureTooltip
+        feature={selectedFeature}
+        x={tooltipPosition.x}
+        y={tooltipPosition.y}
+      />
     </>
   );
 }

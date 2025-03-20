@@ -9,6 +9,7 @@
     "packages/*"
   ],
   "scripts": {
+    "dev": "yarn workspaces foreach --all --parallel --interlaced run start:dev",
     "build": "yarn workspaces foreach --all --topological --verbose run build",
     "build:clean": "yarn workspaces foreach --all --topological --verbose run build:clean",
     "build:watch": "yarn workspaces foreach --all --parallel --interlaced run build:watch",
