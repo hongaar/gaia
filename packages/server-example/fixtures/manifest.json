@@ -26,6 +26,24 @@
               "value": "properties.modified"
             }
           ]
+        },
+        {
+          "id": "example2",
+          "name": "Example 2",
+          "description": "Example layer 2",
+          "icon": "http://localhost:3001/icon.png",
+          "options": [
+            "icons",
+            "labels",
+            "showEverywhere",
+            "showAroundOperation"
+          ],
+          "parameters": [
+            {
+              "key": "sort",
+              "value": "properties.modified"
+            }
+          ]
         }
       ]
     }
