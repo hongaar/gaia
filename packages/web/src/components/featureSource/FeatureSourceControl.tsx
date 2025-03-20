@@ -14,7 +14,9 @@ import { useFeatureSource } from "../../contexts/FeatureSourceContext";
 
 export function FeatureSourceControl() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [newUrl, setNewUrl] = useState("");
+  const [newUrl, setNewUrl] = useState(
+    "https://gaia-example-server.vercel.app",
+  );
   const { sources, addSource, removeSource } = useFeatureSource();
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
