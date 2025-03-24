@@ -1,10 +1,10 @@
 {
   "$schema": "https://geojson.org/schema/FeatureCollection.json",
-  "href": "http://localhost:3001/features/example",
+  "href": "{{BASE_URL}}/features/example",
   "type": "FeatureCollection",
   "features": [
     {
-      "href": "http://localhost:3001/features/example/foo",
+      "href": "{{BASE_URL}}/features/example/foo",
       "type": "Feature",
       "geometry": {
         "type": "Point",
@@ -15,12 +15,12 @@
         "modified": "2025-01-01T00:00:00Z",
         "name": "Foo feature",
         "color": "red",
-        "icon": "http://localhost:3001/icon.png"
+        "icon": "{{BASE_URL}}/icon.png"
       },
       "metadata": {}
     },
     {
-      "href": "http://localhost:3001/features/example/nl1",
+      "href": "{{BASE_URL}}/features/example/nl1",
       "type": "Feature",
       "geometry": { "type": "Point", "coordinates": [4.89, 52.37] },
       "properties": {
@@ -28,12 +28,12 @@
         "modified": "2025-01-01T00:00:00Z",
         "name": "Amsterdam Area",
         "color": "blue",
-        "icon": "http://localhost:3001/icon.png"
+        "icon": "{{BASE_URL}}/icon.png"
       },
       "metadata": {}
     },
     {
-      "href": "http://localhost:3001/features/example/nl2",
+      "href": "{{BASE_URL}}/features/example/nl2",
       "type": "Feature",
       "geometry": { "type": "Point", "coordinates": [5.12, 52.09] },
       "properties": {
@@ -41,12 +41,12 @@
         "modified": "2025-01-01T00:00:00Z",
         "name": "Utrecht Region",
         "color": "green",
-        "icon": "http://localhost:3001/icon.png"
+        "icon": "{{BASE_URL}}/icon.png"
       },
       "metadata": {}
     },
     {
-      "href": "http://localhost:3001/features/example/nl3",
+      "href": "{{BASE_URL}}/features/example/nl3",
       "type": "Feature",
       "geometry": { "type": "Point", "coordinates": [4.47, 51.92] },
       "properties": {
@@ -54,12 +54,12 @@
         "modified": "2025-01-01T00:00:00Z",
         "name": "Rotterdam Zone",
         "color": "yellow",
-        "icon": "http://localhost:3001/icon.png"
+        "icon": "{{BASE_URL}}/icon.png"
       },
       "metadata": {}
     },
     {
-      "href": "http://localhost:3001/features/example/nl4",
+      "href": "{{BASE_URL}}/features/example/nl4",
       "type": "Feature",
       "geometry": { "type": "Point", "coordinates": [6.57, 53.22] },
       "properties": {
@@ -67,12 +67,12 @@
         "modified": "2025-01-01T00:00:00Z",
         "name": "Groningen Area",
         "color": "purple",
-        "icon": "http://localhost:3001/icon.png"
+        "icon": "{{BASE_URL}}/icon.png"
       },
       "metadata": {}
     },
     {
-      "href": "http://localhost:3001/features/example/nl5",
+      "href": "{{BASE_URL}}/features/example/nl5",
       "type": "Feature",
       "geometry": { "type": "Point", "coordinates": [3.72, 51.51] },
       "properties": {
@@ -80,12 +80,12 @@
         "modified": "2025-01-01T00:00:00Z",
         "name": "Zeeland Point",
         "color": "orange",
-        "icon": "http://localhost:3001/icon.png"
+        "icon": "{{BASE_URL}}/icon.png"
       },
       "metadata": {}
     },
     {
-      "href": "http://localhost:3001/features/example/nl6",
+      "href": "{{BASE_URL}}/features/example/nl6",
       "type": "Feature",
       "geometry": { "type": "Point", "coordinates": [5.67, 50.85] },
       "properties": {
@@ -93,12 +93,12 @@
         "modified": "2025-01-01T00:00:00Z",
         "name": "Maastricht Area",
         "color": "pink",
-        "icon": "http://localhost:3001/icon.png"
+        "icon": "{{BASE_URL}}/icon.png"
       },
       "metadata": {}
     },
     {
-      "href": "http://localhost:3001/features/example/nl7",
+      "href": "{{BASE_URL}}/features/example/nl7",
       "type": "Feature",
       "geometry": { "type": "Point", "coordinates": [6.89, 52.78] },
       "properties": {
@@ -106,12 +106,12 @@
         "modified": "2025-01-01T00:00:00Z",
         "name": "Emmen Region",
         "color": "cyan",
-        "icon": "http://localhost:3001/icon.png"
+        "icon": "{{BASE_URL}}/icon.png"
       },
       "metadata": {}
     },
     {
-      "href": "http://localhost:3001/features/example/point1",
+      "href": "{{BASE_URL}}/features/example/point1",
       "type": "Feature",
       "geometry": { "type": "Point", "coordinates": [4.89, 52.37] },
       "properties": {
@@ -119,12 +119,12 @@
         "modified": "2025-01-01T00:00:00Z",
         "name": "Amsterdam Point",
         "color": "blue",
-        "icon": "http://localhost:3001/icon.png"
+        "icon": "{{BASE_URL}}/icon.png"
       },
       "metadata": {}
     },
     {
-      "href": "http://localhost:3001/features/example/point2",
+      "href": "{{BASE_URL}}/features/example/point2",
       "type": "Feature",
       "geometry": { "type": "Point", "coordinates": [5.12, 52.09] },
       "properties": {
@@ -132,12 +132,12 @@
         "modified": "2025-01-01T00:00:00Z",
         "name": "Utrecht Point",
         "color": "green",
-        "icon": "http://localhost:3001/icon.png"
+        "icon": "{{BASE_URL}}/icon.png"
       },
       "metadata": {}
     },
     {
-      "href": "http://localhost:3001/features/example/point3",
+      "href": "{{BASE_URL}}/features/example/point3",
       "type": "Feature",
       "geometry": { "type": "Point", "coordinates": [4.47, 51.92] },
       "properties": {
@@ -145,12 +145,12 @@
         "modified": "2025-01-01T00:00:00Z",
         "name": "Rotterdam Point",
         "color": "yellow",
-        "icon": "http://localhost:3001/icon.png"
+        "icon": "{{BASE_URL}}/icon.png"
       },
       "metadata": {}
     },
     {
-      "href": "http://localhost:3001/features/example/point4",
+      "href": "{{BASE_URL}}/features/example/point4",
       "type": "Feature",
       "geometry": { "type": "Point", "coordinates": [4.31, 52.07] },
       "properties": {
@@ -158,12 +158,12 @@
         "modified": "2025-01-01T00:00:00Z",
         "name": "The Hague Point",
         "color": "purple",
-        "icon": "http://localhost:3001/icon.png"
+        "icon": "{{BASE_URL}}/icon.png"
       },
       "metadata": {}
     },
     {
-      "href": "http://localhost:3001/features/example/point200",
+      "href": "{{BASE_URL}}/features/example/point200",
       "type": "Feature",
       "geometry": { "type": "Point", "coordinates": [5.98, 51.23] },
       "properties": {
@@ -171,12 +171,12 @@
         "modified": "2025-01-01T00:00:00Z",
         "name": "Random Point 200",
         "color": "orange",
-        "icon": "http://localhost:3001/icon.png"
+        "icon": "{{BASE_URL}}/icon.png"
       },
       "metadata": {}
     },
     {
-      "href": "http://localhost:3001/features/example/nl199",
+      "href": "{{BASE_URL}}/features/example/nl199",
       "type": "Feature",
       "geometry": { "type": "Point", "coordinates": [4.78, 51.58] },
       "properties": {
@@ -184,12 +184,12 @@
         "modified": "2025-01-01T00:00:00Z",
         "name": "South Holland Point",
         "color": "teal",
-        "icon": "http://localhost:3001/icon.png"
+        "icon": "{{BASE_URL}}/icon.png"
       },
       "metadata": {}
     },
     {
-      "href": "http://localhost:3001/features/example/nl200",
+      "href": "{{BASE_URL}}/features/example/nl200",
       "type": "Feature",
       "geometry": { "type": "Point", "coordinates": [5.29, 51.69] },
       "properties": {
@@ -197,12 +197,12 @@
         "modified": "2025-01-01T00:00:00Z",
         "name": "Brabant Point",
         "color": "maroon",
-        "icon": "http://localhost:3001/icon.png"
+        "icon": "{{BASE_URL}}/icon.png"
       },
       "metadata": {}
     },
     {
-      "href": "http://localhost:3001/features/example/highway-a2",
+      "href": "{{BASE_URL}}/features/example/highway-a2",
       "type": "Feature",
       "geometry": {
         "type": "LineString",
@@ -218,12 +218,12 @@
         "name": "Highway A2",
         "type": "highway",
         "color": "gray",
-        "icon": "http://localhost:3001/icon.png"
+        "icon": "{{BASE_URL}}/icon.png"
       },
       "metadata": {}
     },
     {
-      "href": "http://localhost:3001/features/example/rhine-river",
+      "href": "{{BASE_URL}}/features/example/rhine-river",
       "type": "Feature",
       "geometry": {
         "type": "LineString",
@@ -239,12 +239,12 @@
         "name": "Rhine River",
         "type": "river",
         "color": "blue",
-        "icon": "http://localhost:3001/icon.png"
+        "icon": "{{BASE_URL}}/icon.png"
       },
       "metadata": {}
     },
     {
-      "href": "http://localhost:3001/features/example/amsterdam-center",
+      "href": "{{BASE_URL}}/features/example/amsterdam-center",
       "type": "Feature",
       "geometry": {
         "type": "Polygon",
@@ -263,12 +263,12 @@
         "name": "Amsterdam City Center",
         "type": "city-area",
         "color": "rgba(255,0,0,0.2)",
-        "icon": "http://localhost:3001/icon.png"
+        "icon": "{{BASE_URL}}/icon.png"
       },
       "metadata": {}
     },
     {
-      "href": "http://localhost:3001/features/example/veluwe",
+      "href": "{{BASE_URL}}/features/example/veluwe",
       "type": "Feature",
       "geometry": {
         "type": "Polygon",
@@ -287,12 +287,12 @@
         "name": "De Veluwe Nature Reserve",
         "type": "nature-reserve",
         "color": "rgba(0,128,0,0.2)",
-        "icon": "http://localhost:3001/icon.png"
+        "icon": "{{BASE_URL}}/icon.png"
       },
       "metadata": {}
     },
     {
-      "href": "http://localhost:3001/features/example/markermeer",
+      "href": "{{BASE_URL}}/features/example/markermeer",
       "type": "Feature",
       "geometry": {
         "type": "Polygon",
@@ -311,12 +311,12 @@
         "name": "Markermeer",
         "type": "water-body",
         "color": "rgba(0,0,255,0.2)",
-        "icon": "http://localhost:3001/icon.png"
+        "icon": "{{BASE_URL}}/icon.png"
       },
       "metadata": {}
     },
     {
-      "href": "http://localhost:3001/features/example/railway-amsterdam-groningen",
+      "href": "{{BASE_URL}}/features/example/railway-amsterdam-groningen",
       "type": "Feature",
       "geometry": {
         "type": "LineString",
@@ -332,12 +332,12 @@
         "name": "Amsterdam-Groningen Railway",
         "type": "railway",
         "color": "yellow",
-        "icon": "http://localhost:3001/icon.png"
+        "icon": "{{BASE_URL}}/icon.png"
       },
       "metadata": {}
     },
     {
-      "href": "http://localhost:3001/features/example/north-holland",
+      "href": "{{BASE_URL}}/features/example/north-holland",
       "type": "Feature",
       "geometry": {
         "type": "Polygon",
@@ -356,7 +356,7 @@
         "name": "North Holland Province (Simplified)",
         "type": "province",
         "color": "rgba(255,165,0,0.2)",
-        "icon": "http://localhost:3001/icon.png"
+        "icon": "{{BASE_URL}}/icon.png"
       },
       "metadata": {}
     }

@@ -1,19 +1,19 @@
 {
-  "$schema": "http://localhost:3001/manifest.schema.json",
-  "href": "http://localhost:3001",
+  "$schema": "{{BASE_URL}}/manifest.schema.json",
+  "href": "{{BASE_URL}}",
   "name": "example-source",
   "description": "Example source",
-  "icon": "http://localhost:3001/icon.png",
+  "icon": "{{BASE_URL}}/icon.png",
   "resources": [
     {
-      "href": "http://localhost:3001/features/example",
+      "href": "{{BASE_URL}}/features/example",
       "type": "feature-collection",
       "layers": [
         {
           "id": "example",
           "name": "Example",
           "description": "Example layer",
-          "icon": "http://localhost:3001/icon.png",
+          "icon": "{{BASE_URL}}/icon.png",
           "options": [
             "icons",
             "labels",
@@ -31,7 +31,7 @@
           "id": "example2",
           "name": "Example 2",
           "description": "Example layer 2",
-          "icon": "http://localhost:3001/icon.png",
+          "icon": "{{BASE_URL}}/icon.png",
           "options": [
             "icons",
             "labels",

@@ -44,6 +44,14 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
+## Environment Variables
+
+The following environment variables can be used to configure the server:
+
+- `PORT` - The port the server will listen on (default: 3001)
+
+The server automatically determines the `BASE_URL` from the incoming request's `Host` header. This allows the same server to be accessed through different hostnames (e.g., localhost, domain name, IP address) and have the `{{BASE_URL}}` placeholders in JSON files properly replaced with the correct URL.
+
 ## Run tests
 
 ```bash

@@ -1,4 +1,5 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, Req } from '@nestjs/common';
+import { Request } from 'express';
 import type { FeatureCollection } from './features.service';
 import { FeaturesService } from './features.service';
 
@@ -12,7 +13,10 @@ export class FeaturesController {
   }
 
   @Get(':id')
-  getFeatureCollection(@Param('id') id: string): Promise<FeatureCollection> {
-    return this.featuresService.getFeatureCollection(id);
+  getFeatureCollection(
+    @Param('id') id: string,
+    @Req() request: Request,
+  ): Promise<FeatureCollection> {
+    return this.featuresService.getFeatureCollection(id, request);
   }
 }

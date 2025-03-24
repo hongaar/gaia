@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import * as fs from 'fs/promises';
 import * as path from 'path';
+import { ConfigService } from '../config/config.service';
 
 export interface Manifest {
   $schema: string;
@@ -36,10 +37,17 @@ export class ManifestService {
     'manifest.json',
   );
 
-  async getManifest(): Promise<Manifest> {
+  constructor(private readonly configService: ConfigService) {}
+
+  async getManifest(request: any): Promise<Manifest> {
     try {
       const manifestContent = await fs.readFile(this.manifestPath, 'utf-8');
-      return JSON.parse(manifestContent) as Manifest;
+      const baseUrl = this.configService.getBaseUrlFromRequest(request);
+      const processedContent = this.configService.replaceBaseUrl(
+        manifestContent,
+        baseUrl,
+      );
+      return JSON.parse(processedContent) as Manifest;
     } catch (error) {
       console.error('Error reading manifest file:', error);
       throw new Error('Failed to read manifest file');

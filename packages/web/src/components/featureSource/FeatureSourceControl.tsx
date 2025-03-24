@@ -15,7 +15,9 @@ import { useFeatureSource } from "../../contexts/FeatureSourceContext";
 export function FeatureSourceControl() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [newUrl, setNewUrl] = useState(
-    "https://gaia-example-server.vercel.app",
+    process.env.NODE_ENV === "development"
+      ? "http://localhost:3001"
+      : "https://gaia-example-server.vercel.app",
   );
   const { sources, addSource, removeSource } = useFeatureSource();
 
