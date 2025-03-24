@@ -50,7 +50,13 @@ The following environment variables can be used to configure the server:
 
 - `PORT` - The port the server will listen on (default: 3001)
 
-The server automatically determines the `BASE_URL` from the incoming request's `Host` header. This allows the same server to be accessed through different hostnames (e.g., localhost, domain name, IP address) and have the `{{BASE_URL}}` placeholders in JSON files properly replaced with the correct URL.
+The server automatically determines the `BASE_URL` from the incoming request's information:
+
+1. It first checks for the `X-Forwarded-Proto` header, which is set by proxies like Vercel.
+2. If not available, it uses the request's `protocol` property.
+3. It combines the protocol with the request's `Host` header to form the complete BASE_URL.
+
+This approach ensures that the server works correctly both in development and when deployed behind proxies (like Vercel), automatically detecting HTTPS when used.
 
 ## Run tests
 

@@ -1,11 +1,18 @@
 import { Injectable } from '@nestjs/common';
+import { Request } from 'express';
 
 @Injectable()
 export class ConfigService {
-  getBaseUrlFromRequest(request: any): string {
-    const protocol = request.protocol || 'http';
+  getBaseUrlFromRequest(request: Request): string {
+    // Check for X-Forwarded-Proto header that proxies like Vercel set
+    const protocol =
+      (request.headers['x-forwarded-proto'] as string) ||
+      request.protocol ||
+      'http';
+
     const host =
       request.headers.host || `localhost:${process.env.PORT || 3001}`;
+
     return `${protocol}://${host}`;
   }
 

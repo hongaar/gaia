@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { Request } from 'express';
 import * as fs from 'fs/promises';
 import * as path from 'path';
 import { ConfigService } from '../config/config.service';
@@ -39,7 +40,7 @@ export class ManifestService {
 
   constructor(private readonly configService: ConfigService) {}
 
-  async getManifest(request: any): Promise<Manifest> {
+  async getManifest(request: Request): Promise<Manifest> {
     try {
       const manifestContent = await fs.readFile(this.manifestPath, 'utf-8');
       const baseUrl = this.configService.getBaseUrlFromRequest(request);

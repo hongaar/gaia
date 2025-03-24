@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { Request } from 'express';
 import * as fs from 'fs/promises';
 import * as path from 'path';
 import { ConfigService } from '../config/config.service';
@@ -40,7 +41,7 @@ export class FeaturesService {
 
   async getFeatureCollection(
     id: string,
-    request: any,
+    request: Request,
   ): Promise<FeatureCollection> {
     try {
       const filePath = path.join(this.featureCollectionsPath, `${id}.json`);
