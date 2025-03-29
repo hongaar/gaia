@@ -1,5 +1,5 @@
 {
-  "name": "@gaia/web",
+  "name": "@gaia/example-client",
   "version": "0.0.0",
   "private": true,
   "repository": "github:hongaar/gaia",
@@ -8,7 +8,6 @@
   "scripts": {
     "build": "react-scripts build",
     "eject": "react-scripts eject",
-    "start": "react-scripts start",
     "start:dev": "react-scripts start",
     "test": "react-scripts test"
   },

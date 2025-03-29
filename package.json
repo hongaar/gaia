@@ -9,7 +9,7 @@
     "packages/*"
   ],
   "scripts": {
-    "dev": "yarn workspaces foreach --all --parallel --interlaced run start:dev",
+    "dev": "yarn workspaces foreach --all --parallel --interlaced --jobs unlimited run start:dev",
     "build": "yarn workspaces foreach --all --topological --verbose run build",
     "build:clean": "yarn workspaces foreach --all --topological --verbose run build:clean",
     "build:watch": "yarn workspaces foreach --all --parallel --interlaced run build:watch",
@@ -21,7 +21,8 @@
     "test": "yarn workspaces foreach --all --topological --verbose run test",
     "todos": "leasot --exit-nicely --reporter markdown --ignore \"**/node_modules\" \"**/*.ts\" > TODO.md",
     "typescript": "yarn build:clean && tsc --build --force",
-    "typescript:watch": "tsc --build --watch"
+    "typescript:watch": "tsc --build --watch",
+    "start:dev": "yarn typescript:watch"
   },
   "lint-staged": {
     "*": "prettier --write --ignore-unknown"
@@ -34,6 +35,7 @@
     "leasot": "14.4.0",
     "lint-staged": "15.5.0",
     "moker": "4.3.0",
+    "npm-run-all": "4.1.5",
     "prettier": "3.5.3",
     "semantic-release": "24.2.3",
     "semantic-release-yarn": "3.0.2",
