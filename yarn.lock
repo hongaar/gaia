@@ -2405,43 +2405,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gaia/components-storybook@workspace:packages/components-storybook":
-  version: 0.0.0-use.local
-  resolution: "@gaia/components-storybook@workspace:packages/components-storybook"
-  dependencies:
-    "@chromatic-com/storybook": "npm:^3"
-    "@eslint/js": "npm:^9.21.0"
-    "@storybook/addon-essentials": "npm:^8.6.11"
-    "@storybook/addon-interactions": "npm:^8.6.11"
-    "@storybook/addon-onboarding": "npm:^8.6.11"
-    "@storybook/blocks": "npm:^8.6.11"
-    "@storybook/react": "npm:^8.6.11"
-    "@storybook/react-vite": "npm:^8.6.11"
-    "@storybook/test": "npm:^8.6.11"
-    "@types/react": "npm:^19.0.10"
-    "@types/react-dom": "npm:^19.0.4"
-    "@vitejs/plugin-react": "npm:^4.3.4"
-    eslint: "npm:^9.21.0"
-    eslint-plugin-react-hooks: "npm:^5.1.0"
-    eslint-plugin-react-refresh: "npm:^0.4.19"
-    eslint-plugin-storybook: "npm:^0.12.0"
-    globals: "npm:^15.15.0"
-    react: "npm:^19.0.0"
-    react-dom: "npm:^19.0.0"
-    storybook: "npm:^8.6.11"
-    typescript: "npm:~5.7.2"
-    typescript-eslint: "npm:^8.24.1"
-    vite: "npm:^6.2.0"
-  languageName: unknown
-  linkType: soft
-
-"@gaia/components@workspace:packages/components":
+"@gaia/components@workspace:*, @gaia/components@workspace:packages/components":
   version: 0.0.0-use.local
   resolution: "@gaia/components@workspace:packages/components"
   dependencies:
     "@types/node": "npm:22.13.14"
     ts-node: "npm:10.9.2"
     typescript: "npm:5.8.2"
+  peerDependencies:
+    maplibre-gl: ^5
+    react: ^19
+    react-map-gl: ^8
   languageName: unknown
   linkType: soft
 
@@ -9247,6 +9221,38 @@ __metadata:
   checksum: 10c0/e4900b1b790b5e76b8d71b328da41482118c0f3523a516a41be598dc2785a07fd721098d9bf6e22d89b19f4fa4e1025160dc00317ea111633a3e4f75c2b86032
   languageName: node
   linkType: hard
+
+"components-storybook@workspace:packages/components-storybook":
+  version: 0.0.0-use.local
+  resolution: "components-storybook@workspace:packages/components-storybook"
+  dependencies:
+    "@chromatic-com/storybook": "npm:^3"
+    "@eslint/js": "npm:^9.21.0"
+    "@gaia/components": "workspace:*"
+    "@storybook/addon-essentials": "npm:^8.6.11"
+    "@storybook/addon-interactions": "npm:^8.6.11"
+    "@storybook/addon-onboarding": "npm:^8.6.11"
+    "@storybook/blocks": "npm:^8.6.11"
+    "@storybook/react": "npm:^8.6.11"
+    "@storybook/react-vite": "npm:^8.6.11"
+    "@storybook/test": "npm:^8.6.11"
+    "@types/react": "npm:^19.0.10"
+    "@types/react-dom": "npm:^19.0.4"
+    "@vitejs/plugin-react": "npm:^4.3.4"
+    eslint: "npm:^9.21.0"
+    eslint-plugin-react-hooks: "npm:^5.1.0"
+    eslint-plugin-react-refresh: "npm:^0.4.19"
+    eslint-plugin-storybook: "npm:^0.12.0"
+    globals: "npm:^15.15.0"
+    react: "npm:^19.0.0"
+    react-docgen-typescript: "npm:2.2.2"
+    react-dom: "npm:^19.0.0"
+    storybook: "npm:^8.6.11"
+    typescript: "npm:~5.7.2"
+    typescript-eslint: "npm:^8.24.1"
+    vite: "npm:^6.2.0"
+  languageName: unknown
+  linkType: soft
 
 "compressible@npm:~2.0.18":
   version: 2.0.18
@@ -19741,7 +19747,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-docgen-typescript@npm:^2.2.2":
+"react-docgen-typescript@npm:2.2.2, react-docgen-typescript@npm:^2.2.2":
   version: 2.2.2
   resolution: "react-docgen-typescript@npm:2.2.2"
   peerDependencies:

@@ -25,6 +25,11 @@
     "ts-node": "10.9.2",
     "typescript": "5.8.2"
   },
+  "peerDependencies": {
+    "maplibre-gl": "^5",
+    "react": "^19",
+    "react-map-gl": "^8"
+  },
   "moker": {
     "plugins": [
       "typescript",
