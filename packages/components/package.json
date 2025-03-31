@@ -14,6 +14,7 @@
     "types"
   ],
   "scripts": {
+    "start:dev": "yarn storybook",
     "build": "yarn build:clean && tsc --build --force",
     "build:clean": "tsc --build --clean",
     "build:watch": "tsc --build --watch",
