@@ -1,3 +1,4 @@
+import type { StyleSpecification } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import {
   RAttributionControl,
@@ -7,13 +8,13 @@ import {
   RScaleControl,
 } from "maplibre-react-components";
 import React from "react";
-import { BaseLayerControl } from "../index.js";
+import { OsmRaster } from "../BaseLayerControl/baseLayers.js";
 
 export interface MapProps {
   /**
-   * Render map at 100% width and height
+   * Map style URL or JSON object.
    */
-  fill?: boolean;
+  mapStyle?: StyleSpecification | string;
 
   /**
    * CSS styles to be applied to the map
@@ -21,9 +22,9 @@ export interface MapProps {
   style?: React.CSSProperties;
 
   /**
-   * Whether to show the base layer control
+   * Render map at 100vw and 100vh
    */
-  baseLayerControl?: boolean;
+  fullscreen?: boolean;
 
   /**
    * Whether to show the navigation control
@@ -53,23 +54,29 @@ export interface MapProps {
   /**
    * React nodes to be rendered inside the map.
    */
+  additionalControls?: React.ReactNode;
+
+  /**
+   * React nodes to be rendered inside the map.
+   */
   children?: React.ReactNode;
 }
 
 export function Map({
-  fill = true,
+  mapStyle = OsmRaster.style,
   style = {},
-  baseLayerControl = true,
+  fullscreen = true,
   navigationControl = true,
   geolocateControl = true,
   scaleControl = true,
   attributionControl = true,
-  onFeatureClick,
+  additionalControls,
   children,
 }: MapProps) {
   return (
     <RMap
-      style={fill ? { width: "100%", height: "100%", ...style } : style}
+      mapStyle={mapStyle}
+      style={fullscreen ? { width: "100vw", height: "100vh", ...style } : style}
       scrollZoom={true}
       dragPan={true}
       dragRotate={true}
@@ -78,12 +85,7 @@ export function Map({
       initialPitchWithRotate={true}
       initialAttributionControl={false}
     >
-      {baseLayerControl && (
-        <BaseLayerControl
-          layerId={"osm"}
-          // onChange={(id) => setMapState((prev) => ({ ...prev, layer: id }))}
-        />
-      )}
+      {additionalControls}
       {navigationControl && (
         <RNavigationControl
           position="top-right"

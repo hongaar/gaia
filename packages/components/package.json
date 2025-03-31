@@ -30,10 +30,8 @@
     "maplibre-react-components": "0.2.0"
   },
   "devDependencies": {
-    "@chromatic-com/storybook": "^3",
     "@storybook/addon-essentials": "^8.6.11",
     "@storybook/addon-interactions": "^8.6.11",
-    "@storybook/addon-onboarding": "^8.6.11",
     "@storybook/blocks": "^8.6.11",
     "@storybook/react": "^8.6.11",
     "@storybook/react-vite": "^8.6.11",

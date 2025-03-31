@@ -1,82 +1,82 @@
 import { Classes, Icon, Popover } from "@blueprintjs/core";
 import type { ControlPosition } from "maplibre-gl";
-import { useRControl } from "maplibre-react-components";
-import React from "react";
+import { useMap, useRControl } from "maplibre-react-components";
+import React, { useState } from "react";
 import { createPortal } from "react-dom";
-import {
-  type BaseLayer,
-  baseLayers as defaultBaseLayers,
-} from "./baseLayers.js";
+import { BaseLayerMenu } from "./BaseLayerMenu.js";
+import { builtinBaseLayers, type BaseLayer } from "./baseLayers.js";
 
-export interface BaseLayerControlProps<T extends BaseLayer = BaseLayer> {
+export interface BaseLayerControlProps {
+  /**
+   * Position of the control on the map.
+   */
   position?: ControlPosition;
-  baseLayers?: T[];
-  layerId?: T["id"];
-  onChange?: (layerId: T["id"]) => void;
+
+  /**
+   * Array of base layers to be displayed in the control.
+   */
+  baseLayers?: BaseLayer[];
+
+  /**
+   * Initial base layer to be displayed when the control is rendered.
+   */
+  initialBaseLayer?: BaseLayer;
+
+  /**
+   * Callback function that is called when the base layer changes.
+   */
+  onChange?: (layer: BaseLayer) => void;
 }
 
-export function BaseLayerControl<T extends BaseLayer = BaseLayer>({
+export function BaseLayerControl({
   position = "top-right",
-  baseLayers = defaultBaseLayers as T[],
-  layerId,
+  baseLayers = builtinBaseLayers,
+  initialBaseLayer,
   onChange,
-}: BaseLayerControlProps<T>) {
+}: BaseLayerControlProps) {
+  if (baseLayers.length === 0) {
+    throw new Error(
+      "BaseLayerControl: No base layers provided. Please provide at least one base layer.",
+    );
+  }
+
+  const [currentBaseLayer, setCurrentBaseLayer] = useState(
+    initialBaseLayer || baseLayers[0]!,
+  );
+
   const { container } = useRControl({
     position,
   });
+
+  const map = useMap();
 
   return createPortal(
     <Popover
       interactionKind="click"
       popoverClassName={Classes.POPOVER_CONTENT_SIZING}
       placement="left"
-      content={<div>menu</div>}
+      content={
+        <BaseLayerMenu
+          {...{
+            baseLayers,
+            currentBaseLayer,
+            setCurrentBaseLayer: (layer) => {
+              setCurrentBaseLayer(layer);
+              map.setStyle(layer.style, {
+                validate: false,
+              });
+              onChange?.(currentBaseLayer);
+            },
+          }}
+        />
+      }
     >
-      <div class="maplibregl-ctrl maplibregl-ctrl-group">
-        <button
-          class="maplibregl-ctrl-zoom-in"
-          type="button"
-          title="Zoom in"
-          aria-label="Zoom in"
-          aria-disabled="false"
-        >
-          <span class="maplibregl-ctrl-icon" aria-hidden="true"></span>
-        </button>
-        <button
-          class="maplibregl-ctrl-zoom-out"
-          type="button"
-          title="Zoom out"
-          aria-label="Zoom out"
-          aria-disabled="false"
-        >
-          <span class="maplibregl-ctrl-icon" aria-hidden="true"></span>
-        </button>
-        <button
-          class="maplibregl-ctrl-compass"
-          type="button"
-          title="Reset bearing to north"
-          aria-label="Reset bearing to north"
-        >
-          <span
-            class="maplibregl-ctrl-icon"
-            aria-hidden="true"
-            style="transform: scale(1) rotateZ(0deg) rotateX(0deg) rotateZ(0deg);"
-          ></span>
-        </button>
-      </div>
       <button
         className="maplibregl-ctrl-zoom-out"
         type="button"
-        title="Base layer"
+        title={currentBaseLayer.title}
       >
-        <Icon icon="map" />
-      </button>
-      <button
-        className="maplibregl-ctrl-zoom-out"
-        type="button"
-        title="Base layer"
-      >
-        <Icon icon="map" />
+        <Icon icon={currentBaseLayer.icon} />
       </button>
     </Popover>,
     container,

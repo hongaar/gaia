@@ -1,3 +1,5 @@
+import type { IconName } from "@blueprintjs/icons";
+
 // Base layer configurations
 interface MapSource {
   type: "raster";
@@ -23,40 +25,41 @@ interface MapStyle {
 
 export interface BaseLayer {
   id: string;
-  name: string;
-  thumbnail: string;
+  title: string;
+  icon: IconName;
   style: MapStyle | string;
 }
 
-export const baseLayers: BaseLayer[] = [
-  {
-    id: "osm-raster",
-    name: "OpenStreetMap (raster)",
-    thumbnail: "/assets/icon-raster.png",
-    style: {
-      version: 8,
-      sources: {
-        osm: {
-          type: "raster",
-          tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
-          tileSize: 256,
-          attribution: "&copy; OpenStreetMap Contributors",
-          maxzoom: 19,
-        },
+export const OsmRaster = {
+  id: "osm-raster",
+  title: "OpenStreetMap (raster)",
+  icon: "map",
+  style: {
+    version: 8,
+    sources: {
+      osm: {
+        type: "raster",
+        tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
+        tileSize: 256,
+        attribution: "&copy; OpenStreetMap Contributors",
+        maxzoom: 19,
       },
-      layers: [
-        {
-          id: "osm",
-          type: "raster",
-          source: "osm",
-        },
-      ],
     },
+    layers: [
+      {
+        id: "osm",
+        type: "raster",
+        source: "osm",
+      },
+    ],
   },
-  {
-    id: "osm-vector",
-    name: "OpenStreetMap (vector)",
-    thumbnail: "/assets/icon-vector.png",
-    style: "https://tiles.openfreemap.org/styles/liberty",
-  },
-];
+} satisfies BaseLayer;
+
+export const OsmVector = {
+  id: "osm-vector",
+  title: "OpenStreetMap (vector)",
+  icon: "globe-network",
+  style: "https://tiles.openfreemap.org/styles/liberty",
+} satisfies BaseLayer;
+
+export const builtinBaseLayers = [OsmRaster, OsmVector];
