@@ -1,17 +1,24 @@
 import "maplibre-gl/dist/maplibre-gl.css";
+import {
+  RAttributionControl,
+  RGeolocateControl,
+  RMap,
+  RNavigationControl,
+  RScaleControl,
+} from "maplibre-react-components";
 import React from "react";
-import MapLibre, {
-  AttributionControl,
-  NavigationControl,
-  ScaleControl,
-} from "react-map-gl/maplibre";
 import { BaseLayerControl } from "../index.js";
 
 export interface MapProps {
   /**
-   * Render map at 100% screen width and height
+   * Render map at 100% width and height
    */
-  fullscreen?: boolean;
+  fill?: boolean;
+
+  /**
+   * CSS styles to be applied to the map
+   */
+  style?: React.CSSProperties;
 
   /**
    * Whether to show the base layer control
@@ -22,6 +29,11 @@ export interface MapProps {
    * Whether to show the navigation control
    */
   navigationControl?: boolean;
+
+  /**
+   * Whether to show the geolocate control
+   */
+  geolocateControl?: boolean;
 
   /**
    * Whether to show the scale control
@@ -45,25 +57,26 @@ export interface MapProps {
 }
 
 export function Map({
-  fullscreen,
+  fill = true,
+  style = {},
   baseLayerControl = true,
   navigationControl = true,
+  geolocateControl = true,
   scaleControl = true,
   attributionControl = true,
   onFeatureClick,
   children,
 }: MapProps) {
   return (
-    <MapLibre
-      style={fullscreen ? { width: "100vw", height: "100vh" } : {}}
+    <RMap
+      style={fill ? { width: "100%", height: "100%", ...style } : style}
       scrollZoom={true}
       dragPan={true}
       dragRotate={true}
       touchZoomRotate={true}
       doubleClickZoom={true}
-      attributionControl={false}
-      reuseMaps={true}
-      pitchWithRotate={true}
+      initialPitchWithRotate={true}
+      initialAttributionControl={false}
     >
       {baseLayerControl && (
         <BaseLayerControl
@@ -72,16 +85,17 @@ export function Map({
         />
       )}
       {navigationControl && (
-        <NavigationControl
+        <RNavigationControl
           position="top-right"
           visualizePitch={true}
           showCompass={true}
           showZoom={true}
         />
       )}
-      {scaleControl && <ScaleControl />}
-      {attributionControl && <AttributionControl position="bottom-right" />}
+      {geolocateControl && <RGeolocateControl position="top-right" />}
+      {scaleControl && <RScaleControl position="bottom-left" />}
+      {attributionControl && <RAttributionControl position="bottom-right" />}
       {children}
-    </MapLibre>
+    </RMap>
   );
 }

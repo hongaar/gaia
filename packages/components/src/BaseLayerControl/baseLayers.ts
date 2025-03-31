@@ -21,7 +21,7 @@ interface MapStyle {
   layers: MapLayer[];
 }
 
-interface BaseLayer {
+export interface BaseLayer {
   id: string;
   name: string;
   thumbnail: string;
