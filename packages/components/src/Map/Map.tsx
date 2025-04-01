@@ -1,4 +1,3 @@
-import type { StyleSpecification } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import {
   RAttributionControl,
@@ -8,13 +7,33 @@ import {
   RScaleControl,
 } from "maplibre-react-components";
 import React from "react";
-import { OsmRaster } from "../BaseLayerControl/baseLayers.js";
+import { Osm, type BaseLayer } from "../BaseLayerControl/baseLayers.js";
 
 export interface MapProps {
   /**
-   * Map style URL or JSON object.
+   * Base layer to be used in the map.
    */
-  mapStyle?: StyleSpecification | string;
+  baseLayer?: BaseLayer;
+
+  /**
+   * Initial center of the map.
+   */
+  initialCenter?: [number, number];
+
+  /**
+   * Initial zoom level of the map.
+   */
+  initialZoom?: number;
+
+  /**
+   * Initial pitch of the map.
+   */
+  initialPitch?: number;
+
+  /**
+   * Initial bearing of the map.
+   */
+  initialBearing?: number;
 
   /**
    * CSS styles to be applied to the map
@@ -22,9 +41,9 @@ export interface MapProps {
   style?: React.CSSProperties;
 
   /**
-   * Render map at 100vw and 100vh
+   * Render map at 100% width and 100% height
    */
-  fullscreen?: boolean;
+  fill?: boolean;
 
   /**
    * Whether to show the navigation control
@@ -62,21 +81,35 @@ export interface MapProps {
   children?: React.ReactNode;
 }
 
+/**
+ * Map component that wraps the MapLibre GL JS library.
+ * It provides a simple interface for rendering a map with various controls and layers.
+ * It also allows for customization of the map's initial state and appearance.
+ */
 export function Map({
-  mapStyle = OsmRaster.style,
+  baseLayer = Osm,
+  initialCenter = [0, 0],
+  initialZoom = 2,
+  initialPitch = 0,
+  initialBearing = 0,
   style = {},
-  fullscreen = true,
+  fill = true,
   navigationControl = true,
   geolocateControl = true,
   scaleControl = true,
   attributionControl = true,
   additionalControls,
   children,
-}: MapProps) {
+  ...rest
+}: MapProps & React.ComponentProps<typeof RMap>) {
   return (
     <RMap
-      mapStyle={mapStyle}
-      style={fullscreen ? { width: "100vw", height: "100vh", ...style } : style}
+      mapStyle={baseLayer.style}
+      initialCenter={initialCenter}
+      initialZoom={initialZoom}
+      initialPitch={initialPitch}
+      initialBearing={initialBearing}
+      style={fill ? { width: "100%", height: "100%", ...style } : style}
       scrollZoom={true}
       dragPan={true}
       dragRotate={true}
@@ -84,6 +117,7 @@ export function Map({
       doubleClickZoom={true}
       initialPitchWithRotate={true}
       initialAttributionControl={false}
+      {...rest}
     >
       {additionalControls}
       {navigationControl && (

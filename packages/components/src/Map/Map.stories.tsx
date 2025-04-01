@@ -1,17 +1,13 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { fn } from "@storybook/test";
-import { OsmRaster, OsmVector } from "../BaseLayerControl/baseLayers.js";
+import { EsriImagery } from "../BaseLayerControl/baseLayers.js";
 import { Map } from "./Map.js";
 
 const meta = {
   title: "Map/Map",
   component: Map,
-  parameters: {
-    layout: "fullscreen",
-  },
-  tags: ["autodocs"],
   argTypes: {},
-  args: { onFeatureClick: fn() },
+  args: { style: { minHeight: "100vh" }, onFeatureClick: fn() },
 } satisfies Meta<typeof Map>;
 
 export default meta;
@@ -20,9 +16,9 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
 
-export const NoFullscreen: Story = {
+export const NoFill: Story = {
   args: {
-    fullscreen: false,
+    fill: false,
     style: { width: "500px", height: "500px" },
   },
 };
@@ -36,20 +32,19 @@ export const NoControls: Story = {
   },
 };
 
-export const MapStyleRaster: Story = {
+export const SatelliteBaseLayer: Story = {
   args: {
-    mapStyle: OsmRaster.style,
+    baseLayer: EsriImagery,
   },
 };
 
-export const MapStyleVector: Story = {
+export const CustomBaseLayer: Story = {
   args: {
-    mapStyle: OsmVector.style,
-  },
-};
-
-export const MapStyleCustom: Story = {
-  args: {
-    mapStyle: "https://demotiles.maplibre.org/style.json",
+    baseLayer: {
+      id: "custom-style",
+      title: "Custom Style",
+      icon: "presentation",
+      style: "https://demotiles.maplibre.org/style.json",
+    },
   },
 };

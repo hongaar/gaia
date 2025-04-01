@@ -1,10 +1,10 @@
-import { Classes, Icon, Popover } from "@blueprintjs/core";
+import { Icon, Popover } from "@blueprintjs/core";
 import type { ControlPosition } from "maplibre-gl";
 import { useMap, useRControl } from "maplibre-react-components";
 import React, { useState } from "react";
 import { createPortal } from "react-dom";
 import { BaseLayerMenu } from "./BaseLayerMenu.js";
-import { builtinBaseLayers, type BaseLayer } from "./baseLayers.js";
+import { defaultBaseLayers, type BaseLayer } from "./baseLayers.js";
 
 export interface BaseLayerControlProps {
   /**
@@ -28,9 +28,14 @@ export interface BaseLayerControlProps {
   onChange?: (layer: BaseLayer) => void;
 }
 
+/**
+ * BaseLayerControl component allows users to switch between different base layers on the map.
+ * It provides a button that, when clicked, opens a popover with a list of available base layers.
+ * Users can select a base layer from the list, and the map will update to display the selected layer.
+ */
 export function BaseLayerControl({
   position = "top-right",
-  baseLayers = builtinBaseLayers,
+  baseLayers = defaultBaseLayers,
   initialBaseLayer,
   onChange,
 }: BaseLayerControlProps) {
@@ -52,9 +57,9 @@ export function BaseLayerControl({
 
   return createPortal(
     <Popover
-      interactionKind="click"
-      popoverClassName={Classes.POPOVER_CONTENT_SIZING}
-      placement="left"
+      interactionKind="hover"
+      fill={true}
+      placement="left-start"
       content={
         <BaseLayerMenu
           {...{
@@ -71,11 +76,7 @@ export function BaseLayerControl({
         />
       }
     >
-      <button
-        className="maplibregl-ctrl-zoom-out"
-        type="button"
-        title={currentBaseLayer.title}
-      >
+      <button type="button" title={currentBaseLayer.title}>
         <Icon icon={currentBaseLayer.icon} />
       </button>
     </Popover>,

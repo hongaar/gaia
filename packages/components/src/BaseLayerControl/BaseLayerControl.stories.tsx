@@ -3,23 +3,20 @@ import { fn } from "@storybook/test";
 import React from "react";
 import { Map } from "../Map/Map.js";
 import { BaseLayerControl } from "./BaseLayerControl.js";
-import { OsmRaster, OsmVector } from "./baseLayers.js";
+import { allBaseLayers, OsmVector } from "./baseLayers.js";
 
 const meta = {
   title: "Map/BaseLayerControl",
   component: BaseLayerControl,
   decorators: [
-    (Story, args) => (
+    (Story, { args }) => (
       <Map
-        mapStyle={args.args.baseLayers?.[0]?.style}
+        style={{ minHeight: "100vh" }}
+        baseLayer={args.baseLayers?.[0]}
         additionalControls={<Story {...args} />}
       />
     ),
   ],
-  parameters: {
-    layout: "fullscreen",
-  },
-  tags: ["autodocs"],
   argTypes: {},
   args: {
     onChange: fn(),
@@ -32,13 +29,13 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
 
-export const OnlyRaster: Story = {
+export const AllAvailable: Story = {
   args: {
-    baseLayers: [OsmRaster],
+    baseLayers: allBaseLayers,
   },
 };
 
-export const OnlyVector: Story = {
+export const Single: Story = {
   args: {
     baseLayers: [OsmVector],
   },
@@ -47,12 +44,15 @@ export const OnlyVector: Story = {
 export const CustomBaseLayer: Story = {
   args: {
     baseLayers: [
-      OsmRaster,
-      OsmVector,
       {
         id: "osm-demo",
         title: "OpenStreetMap (demo)",
-        icon: "presentation",
+        icon: (
+          <img
+            style={{ width: "24px", height: "29px" }}
+            src="https://wiki.openstreetmap.org/w/images/9/9e/OpenStreetMap_green.svg"
+          />
+        ),
         style: "https://demotiles.maplibre.org/style.json",
       },
     ],

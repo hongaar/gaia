@@ -5,7 +5,15 @@ import "@blueprintjs/icons/lib/css/blueprint-icons.css";
 import "normalize.css";
 
 const preview: Preview = {
+  tags: ["autodocs"],
   parameters: {
+    layout: "fullscreen",
+    docs: {
+      toc: true,
+      source: {
+        state: "open",
+      },
+    },
     controls: {
       matchers: {
         color: /(background|color)$/i,

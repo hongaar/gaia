@@ -1,4 +1,4 @@
-import { Icon } from "@blueprintjs/core";
+import { Menu, MenuItem } from "@blueprintjs/core";
 import React from "react";
 import { type BaseLayer } from "./baseLayers.js";
 
@@ -25,21 +25,19 @@ export function BaseLayerMenu({
   setCurrentBaseLayer,
 }: BaseLayerMenuProps) {
   return (
-    <div>
+    <Menu>
       {baseLayers.map((layer) => (
-        <button
+        <MenuItem
+          icon={layer.icon}
           key={layer.id}
-          type="button"
-          title={layer.title}
+          text={layer.title}
+          shouldDismissPopover={false}
           onClick={() => {
             setCurrentBaseLayer(layer);
           }}
-        >
-          <Icon icon={layer.icon} />
-          {layer.title}
-          {currentBaseLayer.id === layer.id && <Icon icon="tick" />}
-        </button>
+          active={currentBaseLayer.id === layer.id}
+        />
       ))}
-    </div>
+    </Menu>
   );
 }
