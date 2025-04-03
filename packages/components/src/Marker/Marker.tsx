@@ -1,5 +1,5 @@
 import { Popover } from "@blueprintjs/core";
-import type { Marker } from "maplibre-gl";
+import type { Marker as MarkerType } from "maplibre-gl";
 import { RMarker } from "maplibre-react-components";
 import React, { useEffect } from "react";
 import type { Location } from "../Map/const.js";
@@ -21,7 +21,7 @@ export interface MarkerProps {
  */
 export function Marker({ location, tooltip }: MarkerProps) {
   const [isOpen, setIsOpen] = React.useState(false);
-  const markerRef = React.useRef<Marker>(null);
+  const markerRef = React.useRef<MarkerType>(null);
 
   useEffect(() => {
     if (markerRef.current) {
@@ -42,13 +42,13 @@ export function Marker({ location, tooltip }: MarkerProps) {
     return (
       <>
         <Popover isOpen={isOpen} content={<div>HELLO</div>}>
-          <RPopup
+          {/* <RPopup
             offset={markerPopupOffset}
             longitude={location.lng}
             latitude={location.lat}
           >
             {tooltip}
-          </RPopup>
+          </RPopup> */}
           <RMarker
             ref={markerRef}
             longitude={location.lng}
