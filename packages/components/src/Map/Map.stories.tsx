@@ -48,3 +48,12 @@ export const CustomBaseLayer: Story = {
     },
   },
 };
+
+export const InitialState: Story = {
+  args: {
+    initialCenter: { lng: 5.387, lat: 52.156 },
+    initialZoom: 6,
+    initialPitch: 0,
+    initialBearing: 0,
+  },
+};

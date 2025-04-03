@@ -1,13 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import React from "react";
 import { Map } from "../Map/Map.js";
-import { LocalStorageProvider } from "./LocalStorageProvider.js";
-import { MapState } from "./MapState.js";
-import { SearchProvider } from "./SearchProvider.js";
+import { Marker } from "./Marker.js";
 
 const meta = {
-  title: "Map/MapState",
-  component: MapState,
+  title: "Marker/Marker",
+  component: Marker,
   decorators: [
     (Story, { args }) => (
       <Map
@@ -19,8 +17,10 @@ const meta = {
     ),
   ],
   argTypes: {},
-  args: {},
-} satisfies Meta<typeof MapState>;
+  args: {
+    location: { lng: 5.387, lat: 52.156 },
+  },
+} satisfies Meta<typeof Marker>;
 
 export default meta;
 
@@ -28,14 +28,8 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
 
-export const Search: Story = {
+export const Tooltip: Story = {
   args: {
-    provider: new SearchProvider(),
-  },
-};
-
-export const LocalStorage: Story = {
-  args: {
-    provider: new LocalStorageProvider(),
+    tooltip: <div>Tooltip content</div>,
   },
 };

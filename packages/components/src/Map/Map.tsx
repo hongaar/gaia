@@ -1,3 +1,4 @@
+import { BlueprintProvider } from "@blueprintjs/core";
 import "maplibre-gl/dist/maplibre-gl.css";
 import {
   RAttributionControl,
@@ -8,6 +9,13 @@ import {
 } from "maplibre-react-components";
 import React from "react";
 import { Osm, type BaseLayer } from "../BaseLayerControl/baseLayers.js";
+import {
+  DEFAULT_BEARING,
+  DEFAULT_CENTER,
+  DEFAULT_PITCH,
+  DEFAULT_ZOOM,
+  type Location,
+} from "./const.js";
 
 export interface MapProps {
   /**
@@ -18,7 +26,7 @@ export interface MapProps {
   /**
    * Initial center of the map.
    */
-  initialCenter?: [number, number];
+  initialCenter?: Location;
 
   /**
    * Initial zoom level of the map.
@@ -68,7 +76,7 @@ export interface MapProps {
   /**
    * Callback fired when a feature is clicked on the map.
    */
-  onFeatureClick?: (event: any) => void;
+  onFeatureClick?: (event: unknown) => void;
 
   /**
    * React nodes to be rendered inside the map.
@@ -88,10 +96,10 @@ export interface MapProps {
  */
 export function Map({
   baseLayer = Osm,
-  initialCenter = [0, 0],
-  initialZoom = 2,
-  initialPitch = 0,
-  initialBearing = 0,
+  initialCenter = DEFAULT_CENTER,
+  initialZoom = DEFAULT_ZOOM,
+  initialPitch = DEFAULT_PITCH,
+  initialBearing = DEFAULT_BEARING,
   style = {},
   fill = true,
   navigationControl = true,
@@ -103,35 +111,37 @@ export function Map({
   ...rest
 }: MapProps & React.ComponentProps<typeof RMap>) {
   return (
-    <RMap
-      mapStyle={baseLayer.style}
-      initialCenter={initialCenter}
-      initialZoom={initialZoom}
-      initialPitch={initialPitch}
-      initialBearing={initialBearing}
-      style={fill ? { width: "100%", height: "100%", ...style } : style}
-      scrollZoom={true}
-      dragPan={true}
-      dragRotate={true}
-      touchZoomRotate={true}
-      doubleClickZoom={true}
-      initialPitchWithRotate={true}
-      initialAttributionControl={false}
-      {...rest}
-    >
-      {additionalControls}
-      {navigationControl && (
-        <RNavigationControl
-          position="top-right"
-          visualizePitch={true}
-          showCompass={true}
-          showZoom={true}
-        />
-      )}
-      {geolocateControl && <RGeolocateControl position="top-right" />}
-      {scaleControl && <RScaleControl position="bottom-left" />}
-      {attributionControl && <RAttributionControl position="bottom-right" />}
-      {children}
-    </RMap>
+    <BlueprintProvider>
+      <RMap
+        mapStyle={baseLayer.style}
+        initialCenter={initialCenter}
+        initialZoom={initialZoom}
+        initialPitch={initialPitch}
+        initialBearing={initialBearing}
+        style={fill ? { width: "100%", height: "100%", ...style } : style}
+        scrollZoom={true}
+        dragPan={true}
+        dragRotate={true}
+        touchZoomRotate={true}
+        doubleClickZoom={true}
+        initialPitchWithRotate={true}
+        initialAttributionControl={false}
+        {...rest}
+      >
+        {additionalControls}
+        {navigationControl && (
+          <RNavigationControl
+            position="top-right"
+            visualizePitch={true}
+            showCompass={true}
+            showZoom={true}
+          />
+        )}
+        {geolocateControl && <RGeolocateControl position="top-right" />}
+        {scaleControl && <RScaleControl position="bottom-left" />}
+        {attributionControl && <RAttributionControl position="bottom-right" />}
+        {children}
+      </RMap>
+    </BlueprintProvider>
   );
 }

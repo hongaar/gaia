@@ -10,9 +10,6 @@ const preview: Preview = {
     layout: "fullscreen",
     docs: {
       toc: true,
-      source: {
-        state: "open",
-      },
     },
     controls: {
       matchers: {
