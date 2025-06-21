@@ -1,11 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import React from "react";
 import { Map } from "../Map/Map.js";
-import { Marker } from "./Marker.js";
+import { Marker2 } from "./Marker2.js";
 
 const meta = {
-  title: "Marker/Marker",
-  component: Marker,
+  title: "Marker/Marker2",
+  component: Marker2,
   decorators: [
     (Story, { args }) => (
       <Map
@@ -20,7 +20,7 @@ const meta = {
   args: {
     location: { lng: 5.387, lat: 52.156 },
   },
-} satisfies Meta<typeof Marker>;
+} satisfies Meta<typeof Marker2>;
 
 export default meta;
 
@@ -30,13 +30,6 @@ export const Default: Story = {};
 
 export const Tooltip: Story = {
   args: {
-    tooltip: "Tooltip content",
-  },
-};
-
-export const TooltipOnHover: Story = {
-  args: {
-    tooltip: "Tooltip content",
-    showTooltipOnHover: true,
+    tooltip: <div>Tooltip content</div>,
   },
 };
