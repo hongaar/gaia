@@ -2443,7 +2443,7 @@ __metadata:
     fela: "npm:12.2.1"
     fela-dom: "npm:12.2.1"
     fela-preset-web: "npm:12.2.1"
-    globals: "npm:^16.0.0"
+    globals: "npm:^16.4.0"
     maplibre-gl: "npm:5.3.0"
     maplibre-react-components: "npm:0.2.0"
     react-fela: "npm:12.2.1"
@@ -2504,7 +2504,7 @@ __metadata:
     eslint: "npm:^9.18.0"
     eslint-config-prettier: "npm:^10.0.1"
     eslint-plugin-prettier: "npm:^5.2.3"
-    globals: "npm:^15.14.0"
+    globals: "npm:^16.4.0"
     jest: "npm:^29.7.0"
     prettier: "npm:^3.4.2"
     reflect-metadata: "npm:^0.2.2"
@@ -12937,17 +12937,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"globals@npm:^15.14.0":
-  version: 15.15.0
-  resolution: "globals@npm:15.15.0"
-  checksum: 10c0/f9ae80996392ca71316495a39bec88ac43ae3525a438b5626cd9d5ce9d5500d0a98a266409605f8cd7241c7acf57c354a48111ea02a767ba4f374b806d6861fe
-  languageName: node
-  linkType: hard
-
-"globals@npm:^16.0.0":
-  version: 16.0.0
-  resolution: "globals@npm:16.0.0"
-  checksum: 10c0/8906d5f01838df64a81d6c2a7b7214312e2216cf65c5ed1546dc9a7d0febddf55ffa906cf04efd5b01eec2534d6f14859a89535d1a68241832810e41ef3fd5bb
+"globals@npm:^16.4.0":
+  version: 16.4.0
+  resolution: "globals@npm:16.4.0"
+  checksum: 10c0/a14b447a78b664b42f6d324e8675fcae6fe5e57924fecc1f6328dce08af9b2ca3a3138501e1b1f244a49814a732dc60cfc1aa24e714e0b64ac8bd18910bfac90
   languageName: node
   linkType: hard
 
