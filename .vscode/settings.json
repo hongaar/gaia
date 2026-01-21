@@ -1,3 +1,31 @@
 {
-  "eslint.workingDirectories": ["./packages/components"]
+  "eslint.workingDirectories": ["./packages/components"],
+
+  // Tell VSCode to validate scss files, this marks 'wrong' scss in your editor.
+  "stylelint.validate": ["css", "postcss"],
+
+  // Format everything (every file) with prettier, upon saving of the file.
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "always",
+    "source.fixAll.stylelint": "always"
+  },
+
+  // Use the workspace version of TypeScript
+  "typescript.tsdk": "node_modules/typescript/lib",
+
+  // Import rules
+  "typescript.preferences.importModuleSpecifierEnding": "js",
+  "typescript.preferences.importModuleSpecifier": "relative",
+  "typescript.preferences.preferTypeOnlyAutoImports": true,
+
+  // SQL formatter
+  "[sql]": {
+    "editor.defaultFormatter": "inferrinizzard.prettier-sql-vscode"
+  },
+  "Prettier-SQL.SQLFlavourOverride": "postgresql",
+
+  // Deno
+  "deno.enable": false
 }

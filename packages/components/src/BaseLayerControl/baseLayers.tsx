@@ -303,6 +303,27 @@ export const GoogleSatellites = {
   },
 } satisfies BaseLayer;
 
+export const OpenFreeMapPositron = {
+  id: "openfreemap-positron",
+  title: "OpenFreeMap Positron",
+  icon: "globe-network",
+  style: "https://tiles.openfreemap.org/styles/positron",
+} satisfies BaseLayer;
+
+export const OpenFreeMapBright = {
+  id: "openfreemap-bright",
+  title: "OpenFreeMap Bright",
+  icon: "globe-network",
+  style: "https://tiles.openfreemap.org/styles/bright",
+} satisfies BaseLayer;
+
+export const OpenFreeMapLiberty = {
+  id: "openfreemap-liberty",
+  title: "OpenFreeMap Liberty",
+  icon: "globe-network",
+  style: "https://tiles.openfreemap.org/styles/liberty",
+} satisfies BaseLayer;
+
 export const allBaseLayers = [
   Osm,
   GoogleRoads,
@@ -316,6 +337,9 @@ export const allBaseLayers = [
   GoogleSatellites,
   UsgsImagery,
   EsriImagery,
+  OpenFreeMapPositron,
+  OpenFreeMapBright,
+  OpenFreeMapLiberty,
 ];
 
 export const defaultBaseLayers = [Osm, GoogleHybrid];
