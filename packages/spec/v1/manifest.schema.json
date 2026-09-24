@@ -1,0 +1,138 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://gaia.js.org/spec/v1/manifest.schema.json",
+  "title": "Gaia Manifest v1",
+  "description": "A manifest for a Gaia data source, version 1.",
+  "type": "object",
+  "properties": {
+    "href": {
+      "description": "The canonical URL for this manifest. It should be a stable, public-facing URL.",
+      "type": "string",
+      "format": "uri"
+    },
+    "name": {
+      "description": "The human-readable name of the data source.",
+      "type": "string"
+    },
+    "description": {
+      "description": "A short description of the data source.",
+      "type": "string"
+    },
+    "icon": {
+      "description": "URL to an icon for the data source. Should be a PNG, JPG, or SVG image.",
+      "type": "string",
+      "format": "uri"
+    },
+    "auth": {
+      "description": "Authentication methods supported by the data source. If not provided, the data source is assumed to be public.",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/auth"
+      }
+    },
+    "resources": {
+      "description": "The data resources provided by this data source.",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/resource"
+      }
+    }
+  },
+  "required": ["href", "name", "description", "resources"],
+  "definitions": {
+    "auth": {
+      "type": "object",
+      "properties": {
+        "method": {
+          "description": "The authentication method.",
+          "type": "string",
+          "enum": ["basic"]
+        }
+      },
+      "required": ["method"]
+    },
+    "resource": {
+      "type": "object",
+      "properties": {
+        "href": {
+          "description": "The URL to the resource.",
+          "type": "string",
+          "format": "uri"
+        },
+        "type": {
+          "description": "The type of the resource.",
+          "type": "string",
+          "enum": ["feature-collection"]
+        },
+        "layers": {
+          "description": "The layers available in this resource.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/layer"
+          }
+        }
+      },
+      "required": ["href", "type"]
+    },
+    "layer": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "The human-readable name of the layer.",
+          "type": "string"
+        },
+        "description": {
+          "description": "A short description of the layer.",
+          "type": "string"
+        },
+        "icon": {
+          "description": "URL to an icon for the layer. Should be a PNG, JPG, or SVG image.",
+          "type": "string",
+          "format": "uri"
+        },
+        "options": {
+          "description": "A list of rendering options for the layer.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "parameters": {
+          "description": "A list of parameters for the layer.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/parameter"
+          }
+        }
+      },
+      "required": ["name"]
+    },
+    "parameter": {
+      "description": "A parameter for a layer. This can be a key-value pair or a filter.",
+      "type": "object",
+      "oneOf": [
+        {
+          "properties": {
+            "key": {
+              "type": "string"
+            },
+            "value": {
+              "type": "string"
+            }
+          },
+          "required": ["key", "value"],
+          "additionalProperties": false
+        },
+        {
+          "properties": {
+            "filter": {
+              "type": "string"
+            }
+          },
+          "required": ["filter"],
+          "additionalProperties": false
+        }
+      ]
+    }
+  }
+}

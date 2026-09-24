@@ -1,0 +1,10 @@
+{
+  "name": "@gaia/spec",
+  "version": "0.0.0",
+  "repository": "github:hongaar/gaia",
+  "license": "MIT",
+  "author": "Joram van den Boezem <joram@vandenboezem.nl>",
+  "moker": {
+    "plugins": []
+  }
+}

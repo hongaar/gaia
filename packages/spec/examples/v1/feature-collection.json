@@ -1,0 +1,23 @@
+{
+  "$schema": "https://gaia.js.org/spec/v1/feature-collection.schema.json",
+  "href": "https://trafficspeed.com/features/verkeersdrukte",
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "href": "https://trafficspeed.com/features/verkeersdrukte/foo",
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [52.0, 0.5]
+      },
+      "properties": {
+        "id": "foo",
+        "modified": "2025-01-01T00:00:00Z",
+        "name": "Foo feature",
+        "color": "red",
+        "icon": "https://trafficspeed.com/icon.png"
+      },
+      "metadata": {}
+    }
+  ]
+}

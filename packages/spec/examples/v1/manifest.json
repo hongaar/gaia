@@ -1,0 +1,35 @@
+{
+  "$schema": "https://gaia.js.org/manifest.schema.json",
+  "href": "https://trafficspeed.com",
+  "name": "traffic-speed-source",
+  "description": "traffic speed data",
+  "icon": "https://trafficspeed.com/icon.png",
+  "auth": [
+    {
+      "method": "basic"
+    }
+  ],
+  "resources": [
+    {
+      "href": "https://trafficspeed.com/features/verkeersdrukte",
+      "type": "feature-collection",
+      "layers": [
+        {
+          "name": "Verkeersdrukte snelwegen",
+          "description": "Laag met verkeersdrukte op snelwegen",
+          "icon": "https://trafficspeed.com/icon.png",
+          "options": ["icons", "labels"],
+          "parameters": [
+            {
+              "key": "sort",
+              "value": "properties.modified"
+            },
+            {
+              "filter": "metadata.type = 'highway'"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
