@@ -1,0 +1,19 @@
+---
+title: Specification
+---
+
+# Specification
+
+These documents are the JSON Schemas and examples in
+[`packages/spec`](https://github.com/hongaar/gaia/tree/main/packages/spec). The
+site loads that directory when it builds. Nothing on this page is a second copy
+of the schema.
+
+Each version is a directory named `v1`, `v2`, and so on. The selector defaults
+to the highest version. Choosing another version shows the schemas and examples
+stored for that version. Adding a version means adding the directory in
+`packages/spec` and rebuilding the docs.
+
+import SpecBrowser from "@site/src/components/SpecBrowser";
+
+<SpecBrowser />
