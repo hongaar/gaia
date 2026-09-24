@@ -7,30 +7,24 @@ title: Using Gaia
 
 ## Publish a source
 
-Serve a manifest that matches the manifest schema, and serve each resource at
-the URL in `resources[].href`.
+Put a manifest at a stable public URL. Put each resource at the URL written in
+`resources[].href`. Both documents must match the schemas for the spec version
+you publish.
 
-```bash
-yarn workspace @gaia/example-server start:dev
-```
+A static host is enough. A service is appropriate when the collection depends on
+the request, for example when a layer `parameter` changes which features are
+returned. The manifest’s `href` is the canonical URL of that document, and each
+feature’s `href` is the canonical URL of that feature.
 
-`GET /` on port `3001` returns the manifest. `GET /features/:id` returns a
-collection. Details are in [Publishing a source](./guides/publishing). A static
-host is enough when the files are already valid JSON.
-`packages/spec/examples/v1` is a manifest and a feature collection in that
-shape.
+Details are in [Publishing a source](./guides/publishing). Sample documents live
+in `packages/spec/examples`.
 
-## Show a source on a map
+## Read a source
 
-```bash
-yarn workspace @gaia/example-client start:dev
-```
+Fetch the manifest URL. Read `resources` and the `layers` on each resource.
+Fetch a resource `href` when you need its features. Draw the GeoJSON with
+whatever map you use.
 
-Add `http://localhost:3001` as a source while the example server is running. The
-client fetches the manifest, lists layers, and fetches a resource URL when a
-layer is visible. Details are in [Consuming a source](./guides/consuming).
+Details are in [Consuming a source](./guides/consuming).
 
-Drawing uses `@gaia/components`. See [Map components](./guides/components) and
-the [components reference](./reference/components).
-
-Field rules for the JSON documents are on the [specification](./spec) page.
+Field rules are on the [specification](./spec) page.

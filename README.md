@@ -20,71 +20,62 @@ Documentation: [packages/docs](packages/docs). The spec itself lives in
 
 ## Packages
 
-| Package                                                         | Role                                                                             |
-| --------------------------------------------------------------- | -------------------------------------------------------------------------------- |
-| [`@gaia/spec`](packages/spec)                                   | Versioned JSON Schemas and examples for manifests and feature collections.       |
-| [`@gaia/sdk-client-js`](packages/sdk-client-js)                 | Reserved for a shared client library. No source API yet; use the example client. |
-| [`@gaia/sdk-server-js`](packages/sdk-server-js)                 | Reserved for a shared server library. No source API yet; use the example server. |
-| [`@gaia/components`](packages/components)                       | React map components (MapLibre, Storybook).                                      |
-| [`@gaia/example-client`](packages/example-client)               | Example map app that loads Gaia sources.                                         |
-| [`@gaia/example-server`](packages/example-server)               | Example NestJS source that serves a manifest and feature collections.            |
-| [`@gaia/example-server-simple`](packages/example-server-simple) | Smaller variant of the example server.                                           |
-| [`docs`](packages/docs)                                         | Docusaurus site.                                                                 |
+| Package                                           | Role                                                                       |
+| ------------------------------------------------- | -------------------------------------------------------------------------- |
+| [`@gaia/spec`](packages/spec)                     | Versioned JSON Schemas and examples for manifests and feature collections. |
+| [`@gaia/sdk-client-js`](packages/sdk-client-js)   | Workspace reserved for a shared client library.                            |
+| [`@gaia/sdk-server-js`](packages/sdk-server-js)   | Workspace reserved for a shared server library.                            |
+| [`@gaia/components`](packages/components)         | React map components (MapLibre, Storybook).                                |
+| [`@gaia/example-client`](packages/example-client) | Example map app that loads Gaia sources.                                   |
+| [`@gaia/example-server`](packages/example-server) | Example source that serves a manifest and feature collections.             |
+| [`docs`](packages/docs)                           | Documentation site. The site root is the docs.                             |
 
 ## Repository layout
 
 ```text
 packages/
-  spec/                  JSON Schemas, one directory per version (v1, …)
-  sdk-client-js/         Client SDK
-  sdk-server-js/         Server SDK
-  components/            Shared React map UI
-  example-client/        Create React App example
-  example-server/        NestJS example source
-  example-server-simple/ Minimal NestJS example source
-  docs/                  Documentation site
+  spec/             JSON Schemas, one directory per version (v1, …)
+  sdk-client-js/    Client SDK workspace
+  sdk-server-js/    Server SDK workspace
+  components/       Shared React map UI
+  example-client/   Example map app
+  example-server/   Example HTTP source
+  docs/             Documentation site
 ```
 
-The root is a Yarn workspaces monorepo (`packages/*`). TypeScript project
+The root is an npm workspaces monorepo (`packages/*`). TypeScript project
 references live in `tsconfig.json` and `tsconfig.base.json`.
 
 ## Getting started
 
-Requirements: Node.js 20 or newer, and Yarn 4 (the repo pins `packageManager` in
-the root `package.json`). From the repository root:
+Requirements: Node.js 20 or newer, and npm 10. From the repository root:
 
 ```bash
-corepack enable
-yarn install
+npm ci
 ```
 
-Run every package that defines `start:dev` (TypeScript watch, docs, Storybook,
-both examples):
+Run every workspace script named `start:dev` (TypeScript watch, docs, Storybook,
+and the examples):
 
 ```bash
-yarn dev
+npm run dev
 ```
 
-The example client (Create React App) and the docs site both want port 3000. Run
-one workspace when you need a single app:
+The example client and the docs site both want port 3000. Run one workspace when
+you need a single app:
 
 ```bash
-yarn workspace @gaia/example-server start:dev   # http://localhost:3001
-yarn workspace @gaia/example-client start:dev   # http://localhost:3000
-yarn workspace docs start:dev                   # documentation site
-yarn workspace @gaia/components start:dev       # Storybook on port 6006
+npm run start:dev -w @gaia/example-server   # http://localhost:3001
+npm run start:dev -w @gaia/example-client   # http://localhost:3000
+npm run start:dev -w docs                   # documentation site
+npm run start:dev -w @gaia/components       # Storybook on port 6006
 ```
 
 Other root scripts:
 
 ```bash
-yarn build          # topological build of every workspace
-yarn test           # tests in every workspace
-yarn format         # Prettier
-yarn typescript     # clean and rebuild the TypeScript solution
+npm run build          # build every workspace that defines build
+npm test               # test every workspace that defines test
+npm run format         # Prettier
+npm run typescript     # clean and rebuild the TypeScript solution
 ```
-
-Point the example client at the example server by adding the server origin as a
-feature source. The server reads fixtures under
-`packages/example-server/fixtures`, rewrites `{{BASE_URL}}` from the incoming
-request, and listens on `PORT` (default `3001`).

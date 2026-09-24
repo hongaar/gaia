@@ -9,20 +9,20 @@
     "packages/*"
   ],
   "scripts": {
-    "dev": "yarn workspaces foreach --all --parallel --interlaced --jobs unlimited run start:dev",
-    "build": "yarn workspaces foreach --all --topological --verbose run build",
-    "build:clean": "yarn workspaces foreach --all --topological --verbose run build:clean",
-    "build:watch": "yarn workspaces foreach --all --parallel --interlaced run build:watch",
+    "dev": "npm run start:dev --workspaces --if-present",
+    "build": "npm run build --workspaces --if-present",
+    "build:clean": "npm run build:clean --workspaces --if-present",
+    "build:watch": "npm run build:watch --workspaces --if-present",
     "doctoc": "doctoc README.md",
     "format": "prettier --write --ignore-unknown .",
     "format:check": "prettier --check --ignore-unknown .",
     "postinstall": "husky install",
     "release": "semantic-release",
-    "test": "yarn workspaces foreach --all --topological --verbose run test",
+    "test": "npm test --workspaces --if-present",
     "todos": "leasot --exit-nicely --reporter markdown --ignore \"**/node_modules\" \"**/*.ts\" > TODO.md",
-    "typescript": "yarn build:clean && tsc --build --force",
+    "typescript": "npm run build:clean && tsc --build --force",
     "typescript:watch": "tsc --build --watch",
-    "start:dev": "yarn typescript:watch"
+    "start:dev": "npm run typescript:watch"
   },
   "lint-staged": {
     "*": "prettier --write --ignore-unknown"
@@ -37,11 +37,11 @@
     "moker": "4.3.0",
     "npm-run-all": "4.1.5",
     "prettier": "3.5.3",
+    "@semantic-release/npm": "12.0.1",
     "semantic-release": "24.2.3",
-    "semantic-release-yarn": "3.0.2",
     "typescript": "5.8.2"
   },
-  "packageManager": "yarn@4.12.0",
+  "packageManager": "npm@10.9.8",
   "moker": {
     "plugins": [
       "prettier",

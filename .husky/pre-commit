@@ -1,5 +1,5 @@
-yarn doctoc && git add README.md
-yarn prettier --write README.md && git add README.md
-yarn lint-staged
-yarn todos && git add TODO.md
-yarn prettier --write TODO.md && git add TODO.md
+npm exec -- doctoc README.md && git add README.md
+npm exec -- prettier --write README.md && git add README.md
+npm exec -- lint-staged
+npm exec -- leasot --exit-nicely --reporter markdown --ignore "**/node_modules" "**/*.ts" > TODO.md && git add TODO.md
+npm exec -- prettier --write TODO.md && git add TODO.md

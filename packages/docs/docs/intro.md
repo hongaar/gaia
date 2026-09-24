@@ -15,11 +15,10 @@ the current specification the only resource type is `feature-collection`, a
 GeoJSON `FeatureCollection` with a stable `href` on the collection and on each
 feature.
 
-Clients do not need a private catalog format. They request the manifest, choose
-a layer, and request that layer’s feature collection. Servers can be static
-files or a small HTTP service. The example server in this repository is the
-latter: it serves fixture JSON and rewrites a base URL so links stay correct
-behind a proxy.
+A client requests the manifest, chooses a layer, and requests that layer’s
+feature collection. The source can be static files or any HTTP service that
+returns those documents. The client and the source share the JSON documents, not
+a runtime or a framework.
 
 The normative documents are the JSON Schemas in
 [`packages/spec`](https://github.com/hongaar/gaia/tree/main/packages/spec). The

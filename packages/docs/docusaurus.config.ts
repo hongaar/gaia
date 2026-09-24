@@ -39,7 +39,7 @@ const config: Config = {
       {
         docs: {
           sidebarPath: "./sidebars.ts",
-          routeBasePath: "docs",
+          routeBasePath: "/",
           editUrl: "https://github.com/hongaar/gaia/tree/main/packages/docs/",
         },
         blog: false,
@@ -81,9 +81,9 @@ const config: Config = {
         {
           title: "Docs",
           items: [
-            { label: "Overview", to: "/docs/" },
-            { label: "Guides", to: "/docs/guides/publishing" },
-            { label: "Specification", to: "/docs/spec" },
+            { label: "Overview", to: "/" },
+            { label: "Guides", to: "/guides/publishing" },
+            { label: "Specification", to: "/spec" },
           ],
         },
         {

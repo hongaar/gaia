@@ -16,11 +16,11 @@
     "types"
   ],
   "scripts": {
-    "start:dev": "yarn storybook",
-    "build": "yarn build:clean && tsc --build --force",
+    "start:dev": "npm run storybook",
+    "build": "npm run build:clean && tsc --build --force",
     "build:clean": "tsc --build --clean",
     "build:watch": "tsc --build --watch",
-    "prepublish": "yarn build",
+    "prepublish": "npm run build",
     "test": "NODE_OPTIONS='--loader=ts-node/esm --no-warnings' node --test test/*.test.ts",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"

@@ -4,18 +4,24 @@ title: Consuming a source
 
 # Consuming a source
 
-A client fetches a manifest URL, then fetches a resource `href` when it needs
-features. `@gaia/example-client` is that client today.
+A client needs the manifest URL and the ability to fetch JSON. It does not need
+a shared database or a generated client.
 
-```bash
-yarn workspace @gaia/example-client start:dev
-```
+1. `GET` the manifest URL.
+2. Validate it against the manifest schema for the version you support.
+3. Show `name`, `description`, and `layers` to the person using the map.
+4. If `auth` is set, obtain credentials for one of the declared methods before
+   requesting a protected resource.
+5. `GET` the resource `href` for the layer you want to show.
+6. Validate the body as a feature collection and draw `features`.
 
-The app opens on port `3000`. Add a source URL in the UI (for the example
-server, `http://localhost:3001`). `FeatureSourceProvider` stores the manifest
-and the visible layers in `localStorage`, and `getFeatures` loads the resource
-URL for a layer.
+Use each document’s `href` as its identity. Store that URL when you remember a
+source or a feature, rather than a local id.
 
-`@gaia/sdk-client-js` is the package reserved for a shared client library. It
-does not yet expose a source API, so reading a source means `fetch` against the
-manifest and resource URLs, as the example client does.
+Layer `parameters` are part of the request the source described. Apply a
+`key`/`value` parameter as the source documents it, and treat `filter` as a
+predicate the source defined. Layer `options` affect presentation only.
+
+Reload a collection when the parameters you send change. The manifest can stay
+cached for as long as its URL still returns the catalog you expect. When `href`
+on the manifest changes, treat it as a different source.

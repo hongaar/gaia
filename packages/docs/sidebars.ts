@@ -8,12 +8,7 @@ const sidebars: SidebarsConfig = {
     {
       type: "category",
       label: "Guides",
-      items: ["guides/publishing", "guides/consuming", "guides/components"],
-    },
-    {
-      type: "category",
-      label: "Reference",
-      items: ["reference/components"],
+      items: ["guides/publishing", "guides/consuming"],
     },
     "spec",
   ],
