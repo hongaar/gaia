@@ -3875,9 +3875,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@gaia/example-server@workspace:packages/example-server-simple":
+"@gaia/example-server@workspace:packages/example-server":
   version: 0.0.0-use.local
-  resolution: "@gaia/example-server@workspace:packages/example-server-simple"
+  resolution: "@gaia/example-server@workspace:packages/example-server"
   dependencies:
     "@eslint/eslintrc": "npm:^3.2.0"
     "@eslint/js": "npm:^9.18.0"
