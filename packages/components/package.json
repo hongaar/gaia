@@ -5,6 +5,8 @@
   "license": "MIT",
   "author": "Joram van den Boezem <joram@vandenboezem.nl>",
   "type": "module",
+  "main": "./dist/index.js",
+  "types": "./types/index.d.ts",
   "exports": {
     "import": "./dist/index.js",
     "types": "./types/index.d.ts"
@@ -24,8 +26,8 @@
     "build-storybook": "storybook build"
   },
   "dependencies": {
-    "@blueprintjs/core": "5.17.6",
-    "@blueprintjs/icons": "5.20.0",
+    "@blueprintjs/core": "6.20.0",
+    "@blueprintjs/icons": "6.14.1",
     "fela": "12.2.1",
     "fela-dom": "12.2.1",
     "fela-preset-web": "12.2.1",

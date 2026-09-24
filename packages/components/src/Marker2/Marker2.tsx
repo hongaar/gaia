@@ -41,13 +41,15 @@ export function Marker2({ location, tooltip }: MarkerProps) {
   if (tooltip) {
     return (
       <>
-        <RPopup
-          offset={markerPopupOffset}
-          longitude={location.lng}
-          latitude={location.lat}
-        >
-          {tooltip}
-        </RPopup>
+        {isOpen && (
+          <RPopup
+            offset={markerPopupOffset}
+            longitude={location.lng}
+            latitude={location.lat}
+          >
+            {tooltip}
+          </RPopup>
+        )}
         <RMarker
           ref={markerRef}
           longitude={location.lng}

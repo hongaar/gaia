@@ -1,48 +1,35 @@
 import { Box, Tooltip } from "@mui/material";
 import type { Feature } from "geojson";
+import { useMap } from "maplibre-react-components";
 import { useEffect, useState } from "react";
-import type { MapRef } from "react-map-gl/maplibre";
 
 interface FeatureTooltipProps {
   feature: Feature | null;
   lngLat: { lng: number; lat: number } | null;
-  mapRef: MapRef | null;
 }
 
-export function FeatureTooltip({
-  feature,
-  lngLat,
-  mapRef,
-}: FeatureTooltipProps) {
-  const [visible, setVisible] = useState(false);
+export function FeatureTooltip({ feature, lngLat }: FeatureTooltipProps) {
+  const map = useMap();
   const [screenPosition, setScreenPosition] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
-    setVisible(!!feature);
-  }, [feature]);
-
-  // Update screen position when map moves or lngLat changes
-  useEffect(() => {
-    if (lngLat && mapRef) {
-      const updatePosition = () => {
-        const point = mapRef.project([lngLat.lng, lngLat.lat]);
-        setScreenPosition({ x: point.x, y: point.y });
-      };
-
-      // Update position immediately
-      updatePosition();
-
-      // Add move event listener
-      mapRef.on("move", updatePosition);
-
-      // Cleanup
-      return () => {
-        mapRef.off("move", updatePosition);
-      };
+    if (!lngLat) {
+      return;
     }
-  }, [lngLat, mapRef]);
 
-  if (!visible || !feature) {
+    const updatePosition = () => {
+      const point = map.project([lngLat.lng, lngLat.lat]);
+      setScreenPosition({ x: point.x, y: point.y });
+    };
+
+    updatePosition();
+    map.on("move", updatePosition);
+    return () => {
+      map.off("move", updatePosition);
+    };
+  }, [lngLat, map]);
+
+  if (!feature) {
     return null;
   }
 

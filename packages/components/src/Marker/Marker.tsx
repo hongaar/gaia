@@ -32,7 +32,11 @@ const rule = () =>
 /**
  * MapState component for managing map state
  */
-export function Marker({ location, tooltip, showTooltipOnHover }: MarkerProps) {
+export function Marker({
+  location,
+  tooltip,
+  showTooltipOnHover = true,
+}: MarkerProps) {
   const [isTooltipOpen, setIsTooltipOpen] = useState(false);
   const markerRef = useRef<MarkerType>(null);
   const tooltipRef = useRef<PopupType>(null);
@@ -40,7 +44,11 @@ export function Marker({ location, tooltip, showTooltipOnHover }: MarkerProps) {
 
   const isMouseOverMarker = useMouseHover({
     ref: markerRef,
-    onMouseEnter: () => setIsTooltipOpen(true),
+    onMouseEnter: () => {
+      if (showTooltipOnHover) {
+        setIsTooltipOpen(true);
+      }
+    },
     onMouseLeave: () => {
       if (!isMouseOverTooltip) {
         setIsTooltipOpen(false);

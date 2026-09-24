@@ -1,4 +1,4 @@
-import { Icon, Popover } from "@blueprintjs/core";
+import { Icon, PopoverNext } from "@blueprintjs/core";
 import type { ControlPosition } from "maplibre-gl";
 import { useMap, useRControl } from "maplibre-react-components";
 import React, { useState } from "react";
@@ -56,7 +56,7 @@ export function BaseLayerControl({
   const map = useMap();
 
   return createPortal(
-    <Popover
+    <PopoverNext
       interactionKind="hover"
       fill={true}
       placement="left-start"
@@ -70,7 +70,7 @@ export function BaseLayerControl({
               map.setStyle(layer.style, {
                 validate: false,
               });
-              onChange?.(currentBaseLayer);
+              onChange?.(layer);
             },
           }}
         />
@@ -79,7 +79,7 @@ export function BaseLayerControl({
       <button type="button" title={currentBaseLayer.title}>
         <Icon icon={currentBaseLayer.icon} />
       </button>
-    </Popover>,
+    </PopoverNext>,
     container,
   );
 }

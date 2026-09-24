@@ -1,293 +1,241 @@
-import type { Feature, FeatureCollection } from "geojson";
-import "maplibre-gl/dist/maplibre-gl.css";
-import { useCallback, useEffect, useRef, useState } from "react";
-import type {
-  MapLayerMouseEvent,
-  MapRef,
-  ViewState,
-} from "react-map-gl/maplibre";
-import MapLibre, {
-  AttributionControl,
-  Layer,
-  NavigationControl,
-  ScaleControl,
-  Source,
-} from "react-map-gl/maplibre";
 import {
   BaseLayerControl,
-  baseLayers,
-  FeatureSourceControl,
-  LayerControl,
-} from "../";
+  Map as GaiaMap,
+  MapState,
+  Osm,
+  SearchProvider,
+} from "@gaia/components";
+import type { Feature, FeatureCollection } from "geojson";
+import type {
+  GeoJSONSource,
+  MapLayerMouseEvent,
+  Map as MapLibreMap,
+} from "maplibre-gl";
+import { useMap } from "maplibre-react-components";
+import { useEffect, useMemo, useState } from "react";
 import { useFeatureSource } from "../../contexts/FeatureSourceContext";
+import { FeatureSourceControl, LayerControl } from "../featureSource";
 import { FeatureTooltip } from "./FeatureTooltip";
 
-interface GeoJSONSource {
-  type: "geojson";
-  data: FeatureCollection;
-}
-
-interface MapState extends ViewState {
-  layer: string;
-}
-
-// Add CSS for navigation control positioning
-const navigationStyle = `
-  .maplibregl-ctrl-top-right {
-    top: 50px !important;
-  }
-`;
-
-// Initial view state
-const initialMapState: MapState = {
-  longitude: 5.3878,
-  latitude: 52.1561,
-  zoom: 7,
-  bearing: 0,
-  pitch: 0,
-  padding: { top: 0, bottom: 0, left: 0, right: 0 },
-  layer: "osm-raster",
-};
-
-// Function to get view state from URL parameters
-function getMapState(): MapState {
-  const params = new URLSearchParams(window.location.search);
-
-  return {
-    ...initialMapState,
-    longitude: Number(params.get("lng") ?? initialMapState.longitude),
-    latitude: Number(params.get("lat") ?? initialMapState.latitude),
-    zoom: Number(params.get("zoom") ?? initialMapState.zoom),
-    bearing: Number(params.get("bearing") ?? initialMapState.bearing),
-    pitch: Number(params.get("pitch") ?? initialMapState.pitch),
-    layer: params.get("layer") ?? initialMapState.layer,
-  };
-}
-
-// Function to update URL with current view state
-function updateUrl(mapState: MapState): void {
-  const params = new URLSearchParams(window.location.search);
-
-  params.set("lng", mapState.longitude.toFixed(6));
-  params.set("lat", mapState.latitude.toFixed(6));
-  params.set("zoom", mapState.zoom.toFixed(2));
-  params.set("bearing", mapState.bearing.toFixed(2));
-  params.set("pitch", mapState.pitch.toFixed(2));
-  params.set("layer", mapState.layer);
-
-  const newUrl = `${window.location.pathname}?${params.toString()}`;
-  window.history.replaceState({}, "", newUrl);
-}
+const searchProvider = new SearchProvider();
 
 export function Map() {
-  const [mapState, setMapState] = useState<MapState>(getMapState());
+  return (
+    <div style={{ position: "relative", width: "100vw", height: "100vh" }}>
+      <GaiaMap
+        baseLayer={Osm}
+        initialCenter={{ lng: 5.3878, lat: 52.1561 }}
+        initialZoom={7}
+      >
+        <MapState provider={searchProvider} />
+        <BaseLayerControl initialBaseLayer={Osm} />
+        <FeatureLayers />
+      </GaiaMap>
+      <FeatureSourceControl />
+      <LayerControl />
+    </div>
+  );
+}
+
+function layerIdsFor(sourceId: string) {
+  return [
+    `${sourceId}-points`,
+    `${sourceId}-lines`,
+    `${sourceId}-polygons-fill`,
+    `${sourceId}-polygons-outline`,
+  ];
+}
+
+function FeatureLayers() {
+  const map = useMap();
   const { sources, getFeatures, isLayerVisible } = useFeatureSource();
-  const [featureLayers, setFeatureLayers] = useState<
-    Record<string, GeoJSONSource>
-  >({});
   const [selectedFeature, setSelectedFeature] = useState<Feature | null>(null);
   const [tooltipPosition, setTooltipPosition] = useState<{
     lng: number;
     lat: number;
   } | null>(null);
-  const mapRef = useRef<MapRef>(null);
 
-  // Update map state when moving map
-  const onMove = useCallback(({ viewState }: { viewState: ViewState }) => {
-    setMapState((prev) => ({ ...prev, ...viewState }));
-  }, []);
-
-  // Update URL when finished moving map
-  const onMoveEnd = useCallback(
-    ({ viewState }: { viewState: ViewState }) => {
-      const newMapState = { ...mapState, ...viewState };
-      setMapState(newMapState);
-      updateUrl(newMapState);
-    },
-    [mapState],
+  const visibilityKey = useMemo(
+    () =>
+      sources
+        .flatMap((source) =>
+          source.resources.flatMap((resource) =>
+            resource.layers.map(
+              (layer) =>
+                `${source.href}|${resource.href}|${layer.id}|${isLayerVisible(source.href, resource.href, layer.id)}`,
+            ),
+          ),
+        )
+        .join(","),
+    [sources, isLayerVisible],
   );
 
-  // Update URL when layer changes
   useEffect(() => {
-    updateUrl(mapState);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mapState.layer]);
+    let cancelled = false;
+    const sourceIds: string[] = [];
 
-  // Load feature layers when sources or layer visibility changes
-  useEffect(() => {
-    const loadFeatures = async () => {
-      const newFeatureLayers: Record<string, GeoJSONSource> = {};
-
+    async function load() {
       for (const source of sources) {
         for (const resource of source.resources) {
           for (const layer of resource.layers) {
-            if (isLayerVisible(source.href, resource.href, layer.id)) {
-              const features = await getFeatures(
-                source.href,
-                resource.href,
-                layer.id,
-              );
-              if (features) {
-                const sourceId = `${source.href}-${resource.href}-${layer.id}`;
-                newFeatureLayers[sourceId] = {
-                  type: "geojson",
-                  data: features,
-                };
-              }
+            if (!isLayerVisible(source.href, resource.href, layer.id)) {
+              continue;
             }
+            const features = await getFeatures(
+              source.href,
+              resource.href,
+              layer.id,
+            );
+            if (cancelled || !features) {
+              continue;
+            }
+            const sourceId = `${source.href}-${resource.href}-${layer.id}`;
+            sourceIds.push(sourceId);
+            upsertGeoJson(map, sourceId, features);
           }
         }
       }
+    }
 
-      setFeatureLayers(newFeatureLayers);
+    function sync() {
+      if (!map.isStyleLoaded()) {
+        return;
+      }
+      void load();
+    }
+
+    sync();
+    map.on("style.load", sync);
+
+    return () => {
+      cancelled = true;
+      map.off("style.load", sync);
+      if (!map.isStyleLoaded()) {
+        return;
+      }
+      for (const sourceId of sourceIds) {
+        removeGeoJson(map, sourceId);
+      }
     };
+  }, [map, sources, getFeatures, isLayerVisible, visibilityKey]);
 
-    loadFeatures();
-  }, [sources, getFeatures, isLayerVisible]);
-
-  const currentLayer = baseLayers.find((layer) => layer.id === mapState.layer);
-
-  const handleMapClick = useCallback(
-    (event: MapLayerMouseEvent) => {
-      // Get all features at the click point, but only from our custom layers
-      const layerIds = Object.keys(featureLayers).flatMap((sourceId) => [
-        `${sourceId}-points`,
-        `${sourceId}-lines`,
-        `${sourceId}-polygons-fill`,
-        `${sourceId}-polygons-outline`,
-      ]);
-      const features = event.target.queryRenderedFeatures(event.point, {
-        layers: layerIds,
-      });
-      if (features && features.length > 0) {
-        setSelectedFeature(features[0]);
-        // Convert screen coordinates to map coordinates
-        const lngLat = event.target.unproject(event.point);
-        setTooltipPosition({ lng: lngLat.lng, lat: lngLat.lat });
+  useEffect(() => {
+    const onClick = (event: MapLayerMouseEvent) => {
+      const layers = sourceIds(map);
+      if (layers.length === 0) {
+        setSelectedFeature(null);
+        setTooltipPosition(null);
+        return;
+      }
+      const features = map.queryRenderedFeatures(event.point, { layers });
+      const feature = features[0];
+      if (feature) {
+        setSelectedFeature(feature);
+        setTooltipPosition({ lng: event.lngLat.lng, lat: event.lngLat.lat });
       } else {
         setSelectedFeature(null);
         setTooltipPosition(null);
       }
+    };
+
+    const onMouseMove = (event: MapLayerMouseEvent) => {
+      const layers = sourceIds(map);
+      const features =
+        layers.length === 0
+          ? []
+          : map.queryRenderedFeatures(event.point, { layers });
+      map.getCanvas().style.cursor = features.length > 0 ? "pointer" : "";
+    };
+
+    map.on("click", onClick);
+    map.on("mousemove", onMouseMove);
+    return () => {
+      map.off("click", onClick);
+      map.off("mousemove", onMouseMove);
+    };
+  }, [map]);
+
+  return <FeatureTooltip feature={selectedFeature} lngLat={tooltipPosition} />;
+}
+
+function sourceIds(map: MapLibreMap) {
+  return (map.getStyle().layers ?? [])
+    .map((layer) => layer.id)
+    .filter(
+      (id) =>
+        id.endsWith("-points") ||
+        id.endsWith("-lines") ||
+        id.endsWith("-polygons-fill") ||
+        id.endsWith("-polygons-outline"),
+    );
+}
+
+function upsertGeoJson(
+  map: MapLibreMap,
+  sourceId: string,
+  data: FeatureCollection,
+) {
+  const existing = map.getSource(sourceId) as GeoJSONSource | undefined;
+  if (existing) {
+    existing.setData(data);
+    return;
+  }
+
+  map.addSource(sourceId, { type: "geojson", data });
+  map.addLayer({
+    id: `${sourceId}-points`,
+    type: "circle",
+    source: sourceId,
+    filter: [
+      "all",
+      ["==", ["geometry-type"], "Point"],
+      ["!=", ["get", "type"], "vertex"],
+    ],
+    paint: {
+      "circle-radius": 6,
+      "circle-color": ["get", "color"],
+      "circle-stroke-width": 1,
+      "circle-stroke-color": "#fff",
     },
-    [featureLayers],
-  );
-
-  const handleMapMouseMove = useCallback(
-    (event: MapLayerMouseEvent) => {
-      const layerIds = Object.keys(featureLayers).flatMap((sourceId) => [
-        `${sourceId}-points`,
-        `${sourceId}-lines`,
-        `${sourceId}-polygons-fill`,
-        `${sourceId}-polygons-outline`,
-      ]);
-      const features = event.target.queryRenderedFeatures(event.point, {
-        layers: layerIds,
-      });
-      // Change cursor to pointer if hovering over a feature, otherwise default
-      event.target.getCanvas().style.cursor =
-        features.length > 0 ? "pointer" : "";
+  });
+  map.addLayer({
+    id: `${sourceId}-lines`,
+    type: "line",
+    source: sourceId,
+    filter: ["==", ["geometry-type"], "LineString"],
+    paint: {
+      "line-width": 2,
+      "line-color": ["get", "color"],
     },
-    [featureLayers],
-  );
+  });
+  map.addLayer({
+    id: `${sourceId}-polygons-fill`,
+    type: "fill",
+    source: sourceId,
+    filter: ["==", ["geometry-type"], "Polygon"],
+    paint: {
+      "fill-color": ["get", "color"],
+    },
+  });
+  map.addLayer({
+    id: `${sourceId}-polygons-outline`,
+    type: "line",
+    source: sourceId,
+    filter: ["==", ["geometry-type"], "Polygon"],
+    paint: {
+      "line-width": 1,
+      "line-color": ["get", "color"],
+    },
+  });
+}
 
-  return (
-    <>
-      <style>{navigationStyle}</style>
-
-      <MapLibre
-        ref={mapRef}
-        {...mapState}
-        onMove={onMove}
-        onMoveEnd={onMoveEnd}
-        onClick={handleMapClick}
-        onMouseMove={handleMapMouseMove}
-        style={{ width: "100vw", height: "100vh" }}
-        mapStyle={currentLayer?.style}
-        scrollZoom={true}
-        dragPan={true}
-        dragRotate={true}
-        touchZoomRotate={true}
-        doubleClickZoom={true}
-        attributionControl={false}
-        reuseMaps={true}
-        pitchWithRotate={true}
-      >
-        <BaseLayerControl
-          layerId={mapState.layer}
-          onChange={(id) => setMapState((prev) => ({ ...prev, layer: id }))}
-        />
-        <NavigationControl
-          position="top-right"
-          visualizePitch={true}
-          showCompass={true}
-          showZoom={true}
-        />
-        <ScaleControl />
-        <AttributionControl position="bottom-right" />
-        <FeatureSourceControl />
-        <LayerControl />
-
-        {Object.entries(featureLayers).map(([sourceId, sourceData]) => (
-          <Source
-            key={sourceId}
-            id={sourceId}
-            type="geojson"
-            data={sourceData.data}
-          >
-            {/* Point features */}
-            <Layer
-              id={`${sourceId}-points`}
-              type="circle"
-              filter={[
-                "all",
-                ["==", ["geometry-type"], "Point"],
-                ["!=", ["get", "type"], "vertex"], // Exclude vertices
-              ]}
-              paint={{
-                "circle-radius": 6,
-                "circle-color": ["get", "color"],
-                "circle-stroke-width": 1,
-                "circle-stroke-color": "#fff",
-              }}
-            />
-
-            {/* LineString features */}
-            <Layer
-              id={`${sourceId}-lines`}
-              type="line"
-              filter={["==", ["geometry-type"], "LineString"]}
-              paint={{
-                "line-width": 2,
-                "line-color": ["get", "color"],
-              }}
-            />
-
-            {/* Polygon features */}
-            <Layer
-              id={`${sourceId}-polygons-fill`}
-              type="fill"
-              filter={["==", ["geometry-type"], "Polygon"]}
-              paint={{
-                "fill-color": ["get", "color"],
-              }}
-            />
-            <Layer
-              id={`${sourceId}-polygons-outline`}
-              type="line"
-              filter={["==", ["geometry-type"], "Polygon"]}
-              paint={{
-                "line-width": 1,
-                "line-color": ["get", "color"],
-              }}
-            />
-          </Source>
-        ))}
-      </MapLibre>
-      <FeatureTooltip
-        feature={selectedFeature}
-        lngLat={tooltipPosition}
-        mapRef={mapRef.current}
-      />
-    </>
-  );
+function removeGeoJson(map: MapLibreMap, sourceId: string) {
+  for (const id of layerIdsFor(sourceId)) {
+    if (map.getLayer(id)) {
+      map.removeLayer(id);
+    }
+  }
+  if (map.getSource(sourceId)) {
+    map.removeSource(sourceId);
+  }
 }
