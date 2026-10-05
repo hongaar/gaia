@@ -23,8 +23,8 @@ Documentation: [packages/docs](packages/docs). The spec itself lives in
 | Package                                           | Role                                                                       |
 | ------------------------------------------------- | -------------------------------------------------------------------------- |
 | [`@gaia/spec`](packages/spec)                     | Versioned JSON Schemas and examples for manifests and feature collections. |
-| [`@gaia/sdk-client-js`](packages/sdk-client-js)   | Workspace reserved for a shared client library.                            |
-| [`@gaia/sdk-server-js`](packages/sdk-server-js)   | Workspace reserved for a shared server library.                            |
+| [`@gaia/sdk-client-ts`](packages/sdk-client-ts)   | TypeScript client SDK.                                                     |
+| [`@gaia/sdk-server-ts`](packages/sdk-server-ts)   | TypeScript server SDK.                                                     |
 | [`@gaia/components`](packages/components)         | React map components (MapLibre, Storybook).                                |
 | [`@gaia/example-client`](packages/example-client) | Example map app that loads Gaia sources.                                   |
 | [`@gaia/example-server`](packages/example-server) | Example source that serves a manifest and feature collections.             |
@@ -35,8 +35,8 @@ Documentation: [packages/docs](packages/docs). The spec itself lives in
 ```text
 packages/
   spec/             JSON Schemas, one directory per version (v1, …)
-  sdk-client-js/    Client SDK workspace
-  sdk-server-js/    Server SDK workspace
+  sdk-client-ts/    TypeScript client SDK
+  sdk-server-ts/    TypeScript server SDK
   components/       Shared React map UI
   example-client/   Example map app
   example-server/   Example HTTP source
