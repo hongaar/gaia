@@ -1,0 +1,35 @@
+---
+sidebar_position: 1
+title: Getting started
+---
+
+import {
+  ClientSdkDoc,
+  SdkLanguageContent,
+} from "@site/src/components/SdkLanguage";
+
+<ClientSdkDoc>
+
+# Getting started
+
+Install the client SDK for your language, then import it in your application.
+
+<SdkLanguageContent language="typescript">
+
+## Install
+
+```bash
+npm install @gaia/sdk-client-ts
+```
+
+In this monorepo, `@gaia/sdk-client-ts` is a workspace package under
+`packages/sdk-client-ts`. Add it as a dependency of another workspace package
+with:
+
+```bash
+npm install @gaia/sdk-client-ts -w your-package
+```
+
+</SdkLanguageContent>
+
+</ClientSdkDoc>

@@ -1,0 +1,21 @@
+---
+sidebar_position: 1
+title: Overview
+---
+
+# Specification
+
+These documents are the JSON Schemas and examples in
+[`packages/spec`](https://github.com/hongaar/gaia/tree/main/packages/spec). The
+site loads that directory when it builds. Nothing here is a second copy of the
+schema.
+
+Each version is a directory named `v1`, `v2`, and so on. Use the version menu in
+the navbar to switch between documentation versions; the schemas and examples on
+each page match that version. When you add a new spec version, add the directory
+under `packages/spec`, run `npm run docusaurus docs:version <name>` in
+`packages/docs` to snapshot the previous docs, and rebuild.
+
+Schema pages live under [`/spec/schemas`](./schemas/manifest) (for example
+[`/spec/schemas/manifest`](./schemas/manifest)). Add a new
+`docs/spec/schemas/<name>.mdx` when you add a schema file in `packages/spec`.

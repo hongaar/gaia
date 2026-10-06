@@ -1,0 +1,35 @@
+---
+sidebar_position: 1
+title: Getting started
+---
+
+import {
+  ServerSdkDoc,
+  SdkLanguageContent,
+} from "@site/src/components/SdkLanguage";
+
+<ServerSdkDoc>
+
+# Getting started
+
+Install the server SDK for your language, then import it in your service.
+
+<SdkLanguageContent language="typescript">
+
+## Install
+
+```bash
+npm install @gaia/sdk-server-ts
+```
+
+In this monorepo, `@gaia/sdk-server-ts` is a workspace package under
+`packages/sdk-server-ts`. Add it as a dependency of another workspace package
+with:
+
+```bash
+npm install @gaia/sdk-server-ts -w your-package
+```
+
+</SdkLanguageContent>
+
+</ServerSdkDoc>

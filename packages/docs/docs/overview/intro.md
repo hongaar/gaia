@@ -22,5 +22,6 @@ a runtime or a framework.
 
 The normative documents are the JSON Schemas in
 [`packages/spec`](https://github.com/hongaar/gaia/tree/main/packages/spec). The
-[specification](./spec) page reads those files at build time, and a version
-control switches between `v1`, `v2`, and later directories as they are added.
+[specification](/spec) section reads those files at build time—one page per
+document type. Use the docs version menu in the navbar to browse `v1`, `v2`, and
+later spec versions as they are added.

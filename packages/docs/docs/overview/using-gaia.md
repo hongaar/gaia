@@ -16,7 +16,7 @@ the request, for example when a layer `parameter` changes which features are
 returned. The manifest’s `href` is the canonical URL of that document, and each
 feature’s `href` is the canonical URL of that feature.
 
-Details are in [Publishing a source](./guides/publishing). Sample documents live
+Details are in [Publishing a source](/guides/publishing). Sample documents live
 in `packages/spec/examples`.
 
 ## Read a source
@@ -25,6 +25,6 @@ Fetch the manifest URL. Read `resources` and the `layers` on each resource.
 Fetch a resource `href` when you need its features. Draw the GeoJSON with
 whatever map you use.
 
-Details are in [Consuming a source](./guides/consuming).
+Details are in [Consuming a source](/guides/consuming).
 
-Field rules are on the [specification](./spec) page.
+Field rules are in the [specification](/spec) section.

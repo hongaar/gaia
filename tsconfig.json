@@ -2,8 +2,8 @@
   "$schema": "https://json.schemastore.org/tsconfig",
   "references": [
     { "path": "./packages/components" },
-    { "path": "./packages/sdk-client-js" },
-    { "path": "./packages/sdk-server-js" }
+    { "path": "./packages/sdk-client-ts" },
+    { "path": "./packages/sdk-server-ts" }
   ],
   "files": []
 }

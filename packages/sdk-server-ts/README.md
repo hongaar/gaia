@@ -1,1 +1,3 @@
-# @gaia/sdk-server-js
+# @gaia/sdk-server-ts
+
+TypeScript server SDK for Gaia.

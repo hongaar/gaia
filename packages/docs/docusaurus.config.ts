@@ -41,6 +41,13 @@ const config: Config = {
           sidebarPath: "./sidebars.ts",
           routeBasePath: "/",
           editUrl: "https://github.com/hongaar/gaia/tree/main/packages/docs/",
+          lastVersion: "current",
+          versions: {
+            current: {
+              label: "v1",
+              banner: "none",
+            },
+          },
         },
         blog: false,
         theme: {
@@ -69,6 +76,34 @@ const config: Config = {
           label: "Docs",
         },
         {
+          type: "docSidebar",
+          sidebarId: "guides",
+          position: "left",
+          label: "Guides",
+        },
+        {
+          type: "docSidebar",
+          sidebarId: "spec",
+          position: "left",
+          label: "Specs",
+        },
+        {
+          type: "docSidebar",
+          sidebarId: "clientSdk",
+          position: "left",
+          label: "Client SDK",
+        },
+        {
+          type: "docSidebar",
+          sidebarId: "serverSdk",
+          position: "left",
+          label: "Server SDK",
+        },
+        {
+          type: "docsVersionDropdown",
+          position: "right",
+        },
+        {
           href: "https://github.com/hongaar/gaia",
           label: "GitHub",
           position: "right",
@@ -80,11 +115,7 @@ const config: Config = {
       links: [
         {
           title: "Docs",
-          items: [
-            { label: "Overview", to: "/" },
-            { label: "Guides", to: "/guides/publishing" },
-            { label: "Specification", to: "/spec" },
-          ],
+          items: [{ label: "Documentation", to: "/" }],
         },
         {
           title: "Repository",

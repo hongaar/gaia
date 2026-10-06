@@ -1,5 +1,5 @@
 {
-  "name": "@gaia/sdk-server-js",
+  "name": "@gaia/sdk-server-ts",
   "version": "0.0.0",
   "repository": "github:hongaar/gaia",
   "license": "MIT",
